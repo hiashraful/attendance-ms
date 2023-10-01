@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,300&family=Press+Start+2P&display=swap");
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.login-container {
+  width: 400px;
+  border-radius: 10px;
+  padding: 30px;
+  margin: 100px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+#login-heading {
+  font-size: 18px;
+  color: #000000;
+}
+
+#error {
+  position: absolute;
+  background: #f2dede;
+  color: #a94442;
+  padding: 5px;
+  width: 200px;
+  border-radius: 5px;
+  margin: -20px auto;
+  text-align: center;
+  font-size: 12px;
+}
+.input-box {
+  border: 1px solid #e8e9f1;
+  border-radius: 5px;
+  padding: 5px;
+  color: #292929;
+  margin-bottom: 15px;
+  text-align: center;
+  width: 200px;
+}
+
+.input-box input {
+  border: none;
+  outline: none;
+}
+
+#login-btn {
+  width: 210px;
+  padding: 10px;
+  background: #66bb6a;
+  border: 1px solid #e8e9f1;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+#btn-logout {
+  width: 210px;
+  padding: 10px;
+  background: #dc3545;
+  border: 1px solid #e8e9f1;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#btn-logout a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+}
+
+#logout-msg {
+    position: absolute;
+  background: #ffc107;
+  color: #000;
+  padding: 5px;
+  width: 200px;
+  border-radius: 5px;
+  margin: -20px auto;
+  text-align: center;
+  font-size: 12px;
+}
+
+#login-success {
+  background: #218838;
+  color: #fff;
+  padding: 5px;
+  width: 200px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 12px;
+  position: absolute;
+  left: 45%;
+}
