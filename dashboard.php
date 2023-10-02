@@ -22,6 +22,7 @@ $username = $_SESSION['username'];
 </head>
 <body>
     <p id="login-success">Logged In Successfully!</p>
+    <h1>Test</h1>
     <form action="" method="post">
         <div class="dashboard-container">
             <h1 id="dashboard-heading">Dashboard</h1>
