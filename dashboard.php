@@ -21,6 +21,7 @@ $username = $_SESSION['username'];
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <h1>This is test two......</h1>
     <div class="sidebar">
         <ul>
             <li><a href="dashboard.php">Dashboard</a></li>
