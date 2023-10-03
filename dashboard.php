@@ -21,9 +21,30 @@ $username = $_SESSION['username'];
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>hello</h1>
-    <h1>This is changed by ashraful</h1>
-    <h2>This is changed from Arif's pc</h2>
+    <div class="sidebar">
+        <ul>
+            <li><a href="dashboard.php">Dashboard</a></li>
+            <li><a href="profile.php">Profile</a></li>
+            <li><a href="logout.php">Logout</a></li>
+        </ul>
+    </div>
+    <div class="card">
+        <div class="emp-details">
+            <h1>Total Employees</h1>
+            <hr>
+            <p>100</p>
+        </div>
+        <div class="emp-late">
+            <h1>Late Today</h1>
+            <hr>
+            <p>10</p>
+        </div>
+        <div class="emp-current">
+            <h1>Currently Working</h1>
+            <hr>
+            <p>50</p>
+        </div>
+    </div>
     <p id="login-success">Logged In Successfully!</p>
     <h1>Test</h1>
     <form action="" method="post">
