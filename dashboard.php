@@ -25,53 +25,53 @@ $username = $_SESSION['username'];
     <!-- New Dashboard -->
     <div class="container">
         <!-- Sidebar -->
-        <nav>
-            <ul>
-                <li>
-                    <a href="#" class="logo">
-                        <img src="./img/dp.jpg">
-                        <p class="user-name"><?php echo $username ?></p>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-comment"></i>
-                        <span class="nav-item">Notification</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                    <i class="fas fa-users"></i>
-                        <span class="nav-item">Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-user-plus"></i>
-                        <span class="nav-item">Add User</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-database"></i>
-                        <span class="nav-item">Report</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-cog"></i>
-                        <span class="nav-item">Setting</span>
-                    </a>
-                </li>
+    <nav>
+        <ul>
+            <li>
+                <a href="user.php?single=<?php echo $username?>" class="logo">
+                    <img src="./img/dp.jpg">
+                    <p class="user-name"><?php echo $username ?></p>
+                </a>
+            </li>
+            <li>
+                <a class="nav-list-item" href="#">
+                    <i class="fas fa-comment"></i>
+                    <span class="nav-item">Notification</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-list-item" href="#">
+                <i class="fas fa-users"></i>
+                    <span class="nav-item">Users</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-list-item" href="#">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="nav-item">Add User</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-list-item" href="#">
+                    <i class="fas fa-database"></i>
+                    <span class="nav-item">Report</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-list-item" href="#">
+                    <i class="fas fa-cog"></i>
+                    <span class="nav-item">Setting</span>
+                </a>
+            </li>
 
-                <li>
-                    <a href="logout.php" class="logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span class="nav-item">Log out</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            <li>
+                <a  href="logout.php" class="logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="nav-item">Log out</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
 
     <section class="main">

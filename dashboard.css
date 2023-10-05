@@ -9,7 +9,7 @@
   font-family: "Poppins", sans-serif;
 }
 body {
-  background: rgb(226, 226, 226);
+  background: #e2e2e2;
 }
 
 .container {
@@ -22,7 +22,7 @@ nav {
   bottom: 0;
   height: 100vh;
   left: 0;
-  width: 90px;
+  width: 95px;
   /* width: 280px; */
   background: #fff;
   overflow: hidden;
@@ -30,16 +30,17 @@ nav {
 }
 
 nav:hover {
-  width: 280px;
+  width: 300px;
   transition: 1s;
 }
 
 .logo {
   display: flex;
-  margin: 10px 0 0 10px;
-  padding-bottom: 3rem;
   align-items: center;
   width: 280px;
+  height: 100px;
+  margin-bottom: 20px;
+  padding-left: 25px;
 }
 
 .logo img {
@@ -60,7 +61,14 @@ a {
 a:hover {
   background-color: #eee;
 }
-
+.nav-list-item {
+  margin-left: 2px;
+}
+.nav-list-item:hover {
+  background-color: #eee;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
 a:hover i {
   color: #34af6d;
   transition: 0.5s;
@@ -161,7 +169,7 @@ nav .fas {
   transition: 0.5s;
 }
 
-/*Attendance List serction  */
+/*Attendance List section  */
 .attendance {
   margin-top: 20px;
   text-transform: capitalize;
