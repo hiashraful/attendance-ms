@@ -24,7 +24,7 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
             <?php }?>
             <h1 id="login-heading">ATTENDANCE MANAGEMENT SYSTEM</h1>
             <div class="icon">
-                <img src="img/user.png" width="50px">
+                <img src="img/user.png" width="60px">
             </div>
             <p>Login Panel</p>
             <div class="input-box">

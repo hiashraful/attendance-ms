@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,700;1,300&family=Press+Start+2P&display=swap");
 body {
   font-family: "Poppins", sans-serif;
+  font-size: 24px;
 }
 
 .login-container {
@@ -15,7 +16,7 @@ body {
 }
 
 #login-heading {
-  font-size: 18px;
+  font-size: 24px;
   color: #000000;
 }
 
@@ -31,30 +32,43 @@ body {
   font-size: 12px;
 }
 .input-box {
+  width: 260px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #e8e9f1;
   border-radius: 5px;
-  padding: 5px;
   color: #292929;
   margin-bottom: 15px;
-  text-align: center;
-  width: 200px;
 }
+
 
 .input-box input {
   border: none;
   outline: none;
+  font-size: 15px;
 }
 
 #login-btn {
-  width: 210px;
+  width: 264px;
+  height: 40px;
   padding: 10px;
+  margin-top: 5px;
   background: #66bb6a;
   border: 1px solid #e8e9f1;
   border-radius: 5px;
   cursor: pointer;
   color: #fff;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
+  font-size: 16px;
 }
+
+#login-btn:hover {
+  transition: background 0.5s ease-in-out;
+  background: #5ca95c;
+}
+
 
 #btn-logout {
   width: 210px;
@@ -68,11 +82,11 @@ body {
 #btn-logout a {
   text-decoration: none;
   color: #fff;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 #logout-msg {
-    position: absolute;
+  position: absolute;
   background: #ffc107;
   color: #000;
   padding: 5px;
@@ -94,35 +108,4 @@ body {
   position: absolute;
   left: 45%;
 }
-.sidebar{
-  background-color: #f5f5f5;
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  overflow-x: hidden;
-  padding-top: 20px;
-}
-.sidebar ul{
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-.sidebar ul li{
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-.sidebar ul li a{
-  text-decoration: none;
-  color: #000;
-  display: block;
-}
-.sidebar ul li a:hover{
-  background-color: #ccc;
-}
-.sidebar ul li.active a{
-  background-color: #4CAF50;
-  color: #fff;
-}
+
