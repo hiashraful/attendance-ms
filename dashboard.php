@@ -1,53 +1,42 @@
 <?php
 require 'connect.php';
 session_start();
-
-// Check if the user is logged in
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");
     exit();
 }
 
-// Retrieve the username from the session
 $username = $_SESSION['username'];
-
-// Retrieve the user's information
 $sql = "SELECT * FROM emp WHERE email=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$_SESSION['email']]);
 $user = $stmt->fetch();
 
-// Retrieve the user's total hours all time
 $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id']]);
 $totalHours = $stmt->fetch();
 
-// Retrieve the user's total hours for the current month
 $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND MONTH(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('m')]);
 $totalHoursMonth = $stmt->fetch();
 
-// Retrieve the user's total hours for the current year
 $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND YEAR(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('Y')]);
 $totalHoursYear = $stmt->fetch();
 
-// Retrieve the user's total hours for the current week
 $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND YEARWEEK(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('YW')]);
 $totalHoursWeek = $stmt->fetch();
 
-// Retrieve the user's total hours for the current day
 $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('Y-m-d')]);
 $totalHoursDay = $stmt->fetch();
 
-// Retrieve the user's total hours for the previous month
 $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND MONTH(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('m', strtotime('-1 month'))]);
@@ -148,33 +137,18 @@ for ($i = 13; $i < 31; $i++) {
           <div class="card">
               <div>
                   <div class="numbers">
-                    <?php
-if ($totalHoursDay['total_hours'] == null) {
-    echo 0;
-} else {
-    echo $totalHoursDay['total_hours'];
-}
-?>
+                    <?php if ($totalHoursDay['total_hours'] == null) {echo 0;} else {echo $totalHoursDay['total_hours'];}?>
                   </div>
                   <div class="cardName">Hours Spent Today</div>
               </div>
-
               <div class="iconBx">
-                  <ion-icon name="eye-outline"></ion-icon>
                   <i class="fas fa-eye"></i>
               </div>
           </div>
-
           <div class="card">
               <div>
                   <div class="numbers">
-                    <?php
-if ($totalHoursWeek['total_hours'] == null) {
-    echo 0;
-} else {
-    echo $totalHoursWeek['total_hours'];
-}
-?>
+                    <?php if ($totalHoursWeek['total_hours'] == null) {echo 0;} else {echo $totalHoursWeek['total_hours'];}?>
                   </div>
                   <div class="cardName">Hours Spent This Week</div>
               </div>
@@ -188,36 +162,21 @@ if ($totalHoursWeek['total_hours'] == null) {
           <div class="card">
               <div>
                   <div class="numbers">
-                    <?php
-if ($totalHoursMonth['total_hours'] == null) {
-    echo 0;
-} else {
-    echo $totalHoursMonth['total_hours'];
-}
-?>
+                    <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'];}?>
                   </div>
                   <div class="cardName">Hours Spent This Month</div>
               </div>
-
               <div class="iconBx">
-              <i class="fa-solid fa-calendar-check"></i>
+                <i class="fa-solid fa-calendar-check"></i>
               </div>
           </div>
-
           <div class="card">
               <div>
-                  <div class="numbers">$
-                    <?php
-if ($totalHoursMonth['total_hours'] == null) {
-    echo 0;
-} else {
-    echo $totalHoursMonth['total_hours'] * 10;
-}
-?>
-                  </div>
-                  <div class="cardName">Earnings This Month</div>
+                <div class="numbers">$
+                    <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'] * 10;}?>
+                </div>
+                <div class="cardName">Earnings This Month</div>
               </div>
-
               <div class="iconBx">
                   <i class="fas fa-money-check-dollar"></i>
               </div>
@@ -243,32 +202,32 @@ if ($totalHoursMonth['total_hours'] == null) {
             </thead>
             <tbody>
               <?php
-$sql = "SELECT * FROM emp_history WHERE logout_time IS NULL";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$users = $stmt->fetchAll();
+                    $sql = "SELECT * FROM emp_history WHERE logout_time IS NULL";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute();
+                    $users = $stmt->fetchAll();
 
-foreach ($users as $user) {
-    $sql = "SELECT * FROM emp WHERE id=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$user['user_id']]);
-    $emp = $stmt->fetch();
+                    foreach ($users as $user) {
+                        $sql = "SELECT * FROM emp WHERE id=?";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute([$user['user_id']]);
+                        $emp = $stmt->fetch();
 
-    $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$emp['id'], date('Y-m-d')]);
-    $totalHoursDay = $stmt->fetch();
-    echo '<tr>';
-    echo '<td>' . $emp['id'] . '</td>';
-    echo '<td>' . $emp['name'] . '</td>';
-    echo '<td>' . $emp['designation'] . '</td>';
-    echo '<td>' . $user['login_date'] . '</td>';
-    echo '<td>' . $user['login_time'] . '</td>';
-    echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
-    echo '<td><a href="user.php?id=' . $emp['id'] . '">Details</a></td>';
-    echo '</tr>';
-}
-?>
+                        $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute([$emp['id'], date('Y-m-d')]);
+                        $totalHoursDay = $stmt->fetch();
+                        echo '<tr>';
+                        echo '<td>' . $emp['id'] . '</td>';
+                        echo '<td>' . $emp['name'] . '</td>';
+                        echo '<td>' . $emp['designation'] . '</td>';
+                        echo '<td>' . $user['login_date'] . '</td>';
+                        echo '<td>' . $user['login_time'] . '</td>';
+                        echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
+                        echo '<td><a href="user.php?id=' . $emp['id'] . '">Details</a></td>';
+                        echo '</tr>';
+                    }
+                    ?>
             </tbody>
           </table>
         </div>
@@ -288,27 +247,26 @@ foreach ($users as $user) {
         }, 1500);
         window.onload = function () {
 
- var chart = new CanvasJS.Chart("chartContainer", {
-   animationEnabled: true,
-   exportEnabled: true,
-   theme: "light1", // "light1", "light2", "dark1", "dark2"
-   title:{
-     text: "Hours Spent This Month"
-   },
-   axisY:{
-     includeZero: true
-   },
-   data: [{
-     type: "column", //change type to bar, line, area, pie, etc
-     //indexLabel: "{y}", //Shows y value on all Data Points
-     indexLabelFontColor: "#5A5757",
-     indexLabelPlacement: "outside",
-     dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-   }]
- });
- chart.render();
+        var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        exportEnabled: true,
+        theme: "light1",
+        title:{
+            text: "Hours Spent This Month"
+        },
+        axisY:{
+            includeZero: true
+        },
+        data: [{
+            type: "column",
+            indexLabelFontColor: "#5A5757",
+            indexLabelPlacement: "outside",
+            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+        }]
+        });
+        chart.render();
 
- }
+    }
     </script>
     <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
 </body>

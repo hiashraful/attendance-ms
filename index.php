@@ -1,5 +1,4 @@
 <?php
-
 if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
     $logoutMessage = "Log out successful!";
 }
