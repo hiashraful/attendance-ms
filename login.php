@@ -2,10 +2,6 @@
 session_start();
 include "connect.php";
 
-// Generate and store CSRF token in the session when the user logs in
-$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-
-
 if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
 
     function validate($data)
@@ -33,13 +29,12 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
         if ($stmt->rowCount() === 1) {
             $row = $stmt->fetch();
             if ($row['email'] === $email && $row['password'] === $password) {
-                $_SESSION['user_id'] = $row['id']; // Store the user's ID in the session
+                $_SESSION['user_id'] = $row['id']; 
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['username'] = $row['name'];
 
-                // Record login time in user_history table
-                $loginDate = date("Y-m-d"); // Get the current date
-                $loginTime = date("H:i:s"); // Get the current time
+                $loginDate = date("Y-m-d"); 
+                $loginTime = date("H:i:s");
                 $sql = "INSERT INTO user_history (user_id, login_date, login_time) VALUES (?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$_SESSION['user_id'], $loginDate, $loginTime]);
