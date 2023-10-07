@@ -11,34 +11,12 @@ if (!isset($_SESSION['email'])) {
 // Retrieve the username from the session
 $username = $_SESSION['username'];
 
-//Add New User
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $uploadDir = 'img/';
-  $uploadFile = $uploadDir . basename($_FILES['image']['name']);
-  
-  // Check if the file is an image
-  $imageFileType = strtolower(pathinfo($uploadFile, PATHINFO_EXTENSION));
-  if (in_array($imageFileType, array('jpg', 'jpeg', 'png', 'gif'))) {
-      if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
-          $imageUrl = $uploadFile;
-          
-          // Insert the image URL into the database
-          $sql = "INSERT INTO user (url) VALUES (:url)";
-          $stmt = $pdo->prepare($sql);
-          $stmt->bindParam(':url', $imageUrl);
-          
-          if ($stmt->execute()) {
-              echo 'Image uploaded and URL added to the database successfully.';
-          } else {
-              echo 'Error inserting URL into the database.';
-          }
-      } else {
-          echo 'Error uploading the image.';
-      }
-  } else {
-      echo 'Invalid file format. Only JPG, JPEG, PNG, and GIF files are allowed.';
-  }
-}
+// Retrieve the user's information
+$sql = "SELECT * FROM emp WHERE email=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$_SESSION['email']]);
+$user = $stmt->fetch();
+
 ?>
 
 
@@ -58,8 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <nav>
         <ul>
             <li>
-                <a href="user.php?single=<?php echo $username?>" class="logo">
-                    <img src="./img/dp.jpg">
+                <a href="user.php?single=<?php echo $username ?>" class="logo">
+                    <img src="<?php echo $user['img'] ?>" alt="">
                     <p class="user-name"><?php echo $username ?></p>
                 </a>
             </li>
@@ -76,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </a>
             </li>
             <li>
-                <a class="nav-list-item" href="#">
+                <a class="nav-list-item" href="add.php">
                     <i class="fas fa-user-plus"></i>
                     <span class="nav-item">Add User</span>
                 </a>
@@ -184,24 +162,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
       </div>
       <!-- Add New User -->
-      <?php
-// Include your database connection here
-include_once 'db_connection.php';
+      <!-- This section will be moved to add user page -->
+    
 
-
-?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Image Upload</title>
-</head>
-<body>
-    <form action="upload.php" method="POST" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*" required>
-        <input type="submit" value="Upload">
-    </form>
-</body>
-</html>
       <!-- Add New User Ends Here -->
       <section class="attendance">
         <div class="attendance-list">

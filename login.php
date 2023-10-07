@@ -22,7 +22,7 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
         header("Location: index.php?error=Password is required");
         exit();
     } else {
-        $sql = "SELECT * FROM users WHERE email=? AND password=?";
+        $sql = "SELECT * FROM emp WHERE email=? AND password=?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$email, $password]);
 
