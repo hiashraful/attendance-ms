@@ -53,6 +53,25 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('m', strtotime('-1 month'))]);
 $totalHoursPrevMonth = $stmt->fetch();
 
+$dataPoints = array(
+    array("x" => 10, "y" => 41),
+    array("x" => 20, "y" => 35, "indexLabel" => "Lowest"),
+    array("x" => 30, "y" => 50),
+    array("x" => 40, "y" => 45),
+    array("x" => 50, "y" => 52),
+    array("x" => 60, "y" => 68),
+    array("x" => 70, "y" => 38),
+    array("x" => 80, "y" => 71, "indexLabel" => "Highest"),
+    array("x" => 90, "y" => 52),
+    array("x" => 100, "y" => 60),
+    array("x" => 110, "y" => 36),
+    array("x" => 120, "y" => 49),
+    array("x" => 130, "y" => 41),
+);
+for ($i = 13; $i < 31; $i++) {
+    $dataPoints[] = array("x" => ($i + 1) * 10, "y" => rand(30, 70));
+}
+
 ?>
 
 
@@ -128,165 +147,138 @@ $totalHoursPrevMonth = $stmt->fetch();
       <div class="cardBox">
           <div class="card">
               <div>
-                  <div class="numbers"> 
-                    <?php 
-                      if ($totalHoursDay['total_hours'] == null) {
-                        echo 0;
-                      } else {
-                        echo $totalHoursDay['total_hours'];
-                      }
-                    ?>  
+                  <div class="numbers">
+                    <?php
+if ($totalHoursDay['total_hours'] == null) {
+    echo 0;
+} else {
+    echo $totalHoursDay['total_hours'];
+}
+?>
                   </div>
                   <div class="cardName">Hours Spent Today</div>
               </div>
 
               <div class="iconBx">
                   <ion-icon name="eye-outline"></ion-icon>
+                  <i class="fas fa-eye"></i>
               </div>
           </div>
 
           <div class="card">
               <div>
                   <div class="numbers">
-                    <?php 
-                      if ($totalHoursWeek['total_hours'] == null) {
-                        echo 0;
-                      } else {
-                        echo $totalHoursWeek['total_hours'];
-                      }
-                    ?>
+                    <?php
+if ($totalHoursWeek['total_hours'] == null) {
+    echo 0;
+} else {
+    echo $totalHoursWeek['total_hours'];
+}
+?>
                   </div>
                   <div class="cardName">Hours Spent This Week</div>
               </div>
 
               <div class="iconBx">
                   <ion-icon name="cart-outline"></ion-icon>
+                  <i class="fas fa-clock"></i>
               </div>
           </div>
 
           <div class="card">
               <div>
                   <div class="numbers">
-                    <?php 
-                      if ($totalHoursMonth['total_hours'] == null) {
-                        echo 0;
-                      } else {
-                        echo $totalHoursMonth['total_hours'];
-                      }
-                    ?>
+                    <?php
+if ($totalHoursMonth['total_hours'] == null) {
+    echo 0;
+} else {
+    echo $totalHoursMonth['total_hours'];
+}
+?>
                   </div>
                   <div class="cardName">Hours Spent This Month</div>
               </div>
 
               <div class="iconBx">
-                  <ion-icon name="chatbubbles-outline"></ion-icon>
+              <i class="fa-solid fa-calendar-check"></i>
               </div>
           </div>
 
           <div class="card">
               <div>
                   <div class="numbers">$
-                    <?php 
-                      if ($totalHoursMonth['total_hours'] == null) {
-                        echo 0;
-                      } else {
-                        echo $totalHoursMonth['total_hours'] * 10;
-                      }
-                    ?>
+                    <?php
+if ($totalHoursMonth['total_hours'] == null) {
+    echo 0;
+} else {
+    echo $totalHoursMonth['total_hours'] * 10;
+}
+?>
                   </div>
                   <div class="cardName">Earnings This Month</div>
               </div>
 
               <div class="iconBx">
-                  <ion-icon name="cash-outline"></ion-icon>
+                  <i class="fas fa-money-check-dollar"></i>
               </div>
           </div>
       </div>
-
+      <!-- ======================= Bar Chart ================== -->
+      <div id="chartContainer" style="height: 370px; width: 100%;"></div>
       <!-- ===================== Attendance List ================== -->
       <div class="attendance">
         <div class="attendance-list">
-          <h1>Attendance List</h1>
+          <h1>Now Online</h1>
           <table class="table">
             <thead>
               <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Depart</th>
+                <th>Designation</th>
                 <th>Date</th>
                 <th>Join Time</th>
-                <th>Logout Time</th>
+                <th>Hours Today</th>
                 <th>Details</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="active">
-                <td>01</td>
-                <td>Sam David</td>
-                <td>Design</td>
-                <td>03-24-22</td>
-                <td>8:00AM</td>
-                <td>3:00PM</td>
-                <td><button>View</button></td>
-              </tr>
-              <tr>
-                <td>02</td>
-                <td>Balbina Kherr</td>
-                <td>Coding</td>
-                <td>03-24-22</td>
-                <td>9:00AM</td>
-                <td>4:00PM</td>
-                <td><button>View</button></td>
-              </tr>
-              <tr>
-                <td>03</td>
-                <td>Badan John</td>
-                <td>testing</td>
-                <td>03-24-22</td>
-                <td>8:00AM</td>
-                <td>3:00PM</td>
-                <td><button>View</button></td>
-              </tr>
-              <tr>
-                <td>04</td>
-                <td>Sara David</td>
-                <td>Design</td>
-                <td>03-24-22</td>
-                <td>8:00AM</td>
-                <td>3:00PM</td>
-                <td><button>View</button></td>
-              </tr>
-              <!-- <tr >
-                <td>05</td>
-                <td>Salina</td>
-                <td>Coding</td>
-                <td>03-24-22</td>
-                <td>9:00AM</td>
-                <td>4:00PM</td>
-                <td><button>View</button></td>
-              </tr>
-              <tr >
-                <td>06</td>
-                <td>Tara Smith</td>
-                <td>Testing</td>
-                <td>03-24-22</td>
-                <td>9:00AM</td>
-                <td>4:00PM</td>
-                <td><button>View</button></td>
-              </tr> -->
+              <?php
+$sql = "SELECT * FROM emp_history WHERE logout_time IS NULL";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$users = $stmt->fetchAll();
+
+foreach ($users as $user) {
+    $sql = "SELECT * FROM emp WHERE id=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$user['user_id']]);
+    $emp = $stmt->fetch();
+
+    $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$emp['id'], date('Y-m-d')]);
+    $totalHoursDay = $stmt->fetch();
+    echo '<tr>';
+    echo '<td>' . $emp['id'] . '</td>';
+    echo '<td>' . $emp['name'] . '</td>';
+    echo '<td>' . $emp['designation'] . '</td>';
+    echo '<td>' . $user['login_date'] . '</td>';
+    echo '<td>' . $user['login_time'] . '</td>';
+    echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
+    echo '<td><a href="user.php?id=' . $emp['id'] . '">Details</a></td>';
+    echo '</tr>';
+}
+?>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- ======================= Bar Chart ================== -->
-      <div class="barchart">
-        <canvas id="myBarChart" width="400" height="200"></canvas>
-      </div>
+
     </section>
   </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
     <script>
         setTimeout(function() {
             var loginMessage = document.getElementById('login-success');
@@ -294,70 +286,30 @@ $totalHoursPrevMonth = $stmt->fetch();
                 loginMessage.style.display = 'none';
             }
         }, 1500);
+        window.onload = function () {
 
-    // Sample data (replace with your data)
-    var currentDate = new Date();
-    var daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(); // Get the number of days in the current month
+ var chart = new CanvasJS.Chart("chartContainer", {
+   animationEnabled: true,
+   exportEnabled: true,
+   theme: "light1", // "light1", "light2", "dark1", "dark2"
+   title:{
+     text: "Hours Spent This Month"
+   },
+   axisY:{
+     includeZero: true
+   },
+   data: [{
+     type: "column", //change type to bar, line, area, pie, etc
+     //indexLabel: "{y}", //Shows y value on all Data Points
+     indexLabelFontColor: "#5A5757",
+     indexLabelPlacement: "outside",
+     dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+   }]
+ });
+ chart.render();
 
-    // Generate date labels for the current month
-    var dateLabels = [];
-    for (var i = 1; i <= daysInMonth; i++) {
-        dateLabels.push(currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + i);
-    }
-
-    var data = {
-        labels: dateLabels, // Use the generated date labels
-        datasets: [
-            {
-                label: "Hours Spent",
-                backgroundColor: "rgba(75, 192, 192, 0.2)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1,
-                data: [
-                    <?php
-                    echo $totalHours['total_hours'] ?? 0; // Total Hours
-                    echo ", ";
-                    echo $totalHoursMonth['total_hours'] ?? 0; // This Month
-                    echo ", ";
-                    echo $totalHoursYear['total_hours'] ?? 0; // This Year
-                    echo ", ";
-                    echo $totalHoursWeek['total_hours'] ?? 0; // This Week
-                    echo ", ";
-                    echo $totalHoursDay['total_hours'] ?? 0; // Today
-                    echo ", ";
-                    echo $totalHoursPrevMonth['total_hours'] ?? 0; // Prev Month
-                    ?>
-                ], // Replace with your hours spent data
-            },
-        ],
-    };
-
-    // Configuration options
-    var options = {
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: "Hours Spent",
-                },
-            },
-            x: {
-                title: {
-                    display: true,
-                    text: "Date",
-                },
-            },
-        },
-    };
-
-    // Get the canvas element and create the chart
-    var ctx = document.getElementById("myBarChart").getContext("2d");
-    var myBarChart = new Chart(ctx, {
-        type: "bar",
-        data: data,
-        options: options,
-    });
-</script>
+ }
+    </script>
+    <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -58,7 +58,7 @@ nav:hover {
   border-radius: 50%;
 }
 
-a {
+nav a {
   position: relative;
   width: 280px;
   font-size: 14px;
@@ -67,16 +67,16 @@ a {
   padding: 10px;
 }
 
-a:hover {
+nav a:hover {
   background-color: #eee;
 }
 .nav-list-item {
   margin-left: 2px;
+  width: 245px;
 }
 .nav-list-item:hover {
   background-color: #eee;
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
+  border-radius: 30px;
 }
 a:hover i {
   color: #34af6d;
@@ -222,17 +222,24 @@ table thead tr {
 .table tbody tr:last-of-type {
   border-bottom: 2px solid #4ad489;
 }
-.table button {
-  padding: 6px 20px;
+.table td a {
+  position: relative;
+  width: 280px;
+  font-size: 14px;
+  padding: 10px 20px;
+  color: white;
+  background-color: #4ad489;
   border-radius: 10px;
-  cursor: pointer;
-  background: transparent;
-  border: 1px solid #4ad489;
 }
-.table button:hover {
-  background: #4ad489;
+.table td a:hover {
+  background: #34af6d;
   color: #fff;
   transition: 0.5rem;
+}
+.table tbody tr:hover {
+  background: #bdbdbd;
+  transition: 0.3s;
+  cursor: pointer;
 }
 
 /* ======================= Cards ====================== */
@@ -256,7 +263,6 @@ table thead tr {
   box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
 }
 
-
 .container .main .cardBox .card .numbers {
   position: relative;
   font-weight: 500;
@@ -264,7 +270,7 @@ table thead tr {
   color: var(--blue);
 }
 
-.container .main  .cardBox .card .cardName {
+.container .main .cardBox .card .cardName {
   color: var(--black2);
   font-size: 1.1rem;
   margin-top: 5px;
@@ -283,8 +289,4 @@ table thead tr {
 .container .main .cardBox .card:hover .cardName,
 .container .main .cardBox .card:hover .iconBx {
   color: var(--white);
-}
-
-#myBarChart{
-  height: 200px;
 }
