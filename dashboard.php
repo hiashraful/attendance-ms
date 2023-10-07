@@ -102,7 +102,7 @@ $totalHoursPrevMonth = $stmt->fetch();
                 </a>
             </li>
             <li>
-                <a class="nav-list-item" href="#">
+                <a class="nav-list-item" href="user.php">
                     <i class="fas fa-cog"></i>
                     <span class="nav-item">Setting</span>
                 </a>
@@ -202,82 +202,9 @@ $totalHoursPrevMonth = $stmt->fetch();
               </div>
           </div>
       </div>
-      <!-- Old Cards, will be removed later -->
-      <!-- <div class="users">
-        <div class="card">
-          <img src="<?php echo $user['img'] ?>">
-          <h4>Hours Spent Today</h4>
-          <p>Ui designer</p>
-          <div class="per">
-            <table>
-              <tr>
-                <td><span>85%</span></td>
-                <td><span>87%</span></td>
-              </tr>
-              <tr>
-                <td>Month</td>
-                <td>Year</td>
-              </tr>
-            </table>
-          </div>
-          <button>Profile</button>
-        </div>
-        <div class="card">
-          <img src="./img/dp.jpg">
-          <h4>Balbina kherr</h4>
-          <p>Progammer</p>
-          <div class="per">
-            <table>
-              <tr>
-                <td><span>82%</span></td>
-                <td><span>85%</span></td>
-              </tr>
-              <tr>
-                <td>Month</td>
-                <td>Year</td>
-              </tr>
-            </table>
-          </div>
-          <button>Profile</button>
-        </div>
-        <div class="card">
-          <img src="./img/dp.jpg">
-          <h4>Badan John</h4>
-          <p>tester</p>
-          <div class="per">
-            <table>
-              <tr>
-                <td><span>94%</span></td>
-                <td><span>92%</span></td>
-              </tr>
-              <tr>
-                <td>Month</td>
-                <td>Year</td>
-              </tr>
-            </table>
-          </div>
-          <button>Profile</button>
-        </div>
-        <div class="card">
-          <img src="./img/dp.jpg">
-          <h4>Salina micheal</h4>
-          <p>Ui designer</p>
-          <div class="per">
-            <table>
-              <tr>
-                <td><span>85%</span></td>
-                <td><span>82%</span></td>
-              </tr>
-              <tr>
-                <td>Month</td>
-                <td>Year</td>
-              </tr>
-            </table>
-          </div>
-          <button>Profile</button>
-        </div>
-      </div> -->
-      <section class="attendance">
+
+      <!-- ===================== Attendance List ================== -->
+      <div class="attendance">
         <div class="attendance-list">
           <h1>Attendance List</h1>
           <table class="table">
@@ -350,24 +277,16 @@ $totalHoursPrevMonth = $stmt->fetch();
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
+
+      <!-- ======================= Bar Chart ================== -->
+      <div class="barchart">
+        <canvas id="myBarChart" width="400" height="200"></canvas>
+      </div>
     </section>
   </div>
 
-
-    <!-- Old Code -->
-    <!-- <p id="login-success">Logged In Successfully!</p>
-    <h1>Test</h1>
-    <form action="" method="post">
-        <div class="dashboard-container">
-            <h1 id="dashboard-heading">Dashboard</h1>
-            <p>Welcome, <?php echo $username; ?> </p>
-        </div>
-    </form>
-    <div class="logout">
-        <button id="btn-logout"><a href="logout.php">Logout</a></button>
-    </div> -->
-    <!-- Old Code -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         setTimeout(function() {
             var loginMessage = document.getElementById('login-success');
@@ -375,6 +294,70 @@ $totalHoursPrevMonth = $stmt->fetch();
                 loginMessage.style.display = 'none';
             }
         }, 1500);
-    </script>
+
+    // Sample data (replace with your data)
+    var currentDate = new Date();
+    var daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(); // Get the number of days in the current month
+
+    // Generate date labels for the current month
+    var dateLabels = [];
+    for (var i = 1; i <= daysInMonth; i++) {
+        dateLabels.push(currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + i);
+    }
+
+    var data = {
+        labels: dateLabels, // Use the generated date labels
+        datasets: [
+            {
+                label: "Hours Spent",
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+                data: [
+                    <?php
+                    echo $totalHours['total_hours'] ?? 0; // Total Hours
+                    echo ", ";
+                    echo $totalHoursMonth['total_hours'] ?? 0; // This Month
+                    echo ", ";
+                    echo $totalHoursYear['total_hours'] ?? 0; // This Year
+                    echo ", ";
+                    echo $totalHoursWeek['total_hours'] ?? 0; // This Week
+                    echo ", ";
+                    echo $totalHoursDay['total_hours'] ?? 0; // Today
+                    echo ", ";
+                    echo $totalHoursPrevMonth['total_hours'] ?? 0; // Prev Month
+                    ?>
+                ], // Replace with your hours spent data
+            },
+        ],
+    };
+
+    // Configuration options
+    var options = {
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: "Hours Spent",
+                },
+            },
+            x: {
+                title: {
+                    display: true,
+                    text: "Date",
+                },
+            },
+        },
+    };
+
+    // Get the canvas element and create the chart
+    var ctx = document.getElementById("myBarChart").getContext("2d");
+    var myBarChart = new Chart(ctx, {
+        type: "bar",
+        data: data,
+        options: options,
+    });
+</script>
 </body>
 </html>

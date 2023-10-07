@@ -2,6 +2,10 @@
 session_start();
 include "connect.php";
 
+// Generate and store CSRF token in the session when the user logs in
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+
 if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
 
     function validate($data)

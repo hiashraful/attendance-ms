@@ -284,3 +284,7 @@ table thead tr {
 .container .main .cardBox .card:hover .iconBx {
   color: var(--white);
 }
+
+#myBarChart{
+  height: 200px;
+}

@@ -1,0 +1,90 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Poppins, sans-serif;
+}
+body {
+  background-color: #f1f1f1;
+  font-size: 18px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.update {
+  position: absolute;
+  top: 50px;
+  transform: scale(0);
+  opacity: 0;
+  animation: scaleAndFadeIn 1s ease-in-out forwards;
+}
+
+@keyframes scaleAndFadeIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+#cross {
+  position: absolute;
+  top: 110px;
+  right: 20px;
+  padding: 10px;
+  width: 40px;
+  cursor: pointer;
+}
+.fa-rectangle-xmark {
+  font-size: 25px;
+  color: gray;
+}
+form {
+  width: 500px;
+  margin: 100px auto;
+  padding: 40px;
+  background-color: white;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+input {
+  width: 250px;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+}
+label {
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+input[type="submit"] {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 15px;
+  margin-left: 100px;
+  width: 200px;
+}
+input[type="submit"]:hover {
+  background-color: #45a049;
+  cursor: pointer;
+}
