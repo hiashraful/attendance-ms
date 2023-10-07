@@ -35,7 +35,7 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
 
                 $loginDate = date("Y-m-d"); 
                 $loginTime = date("H:i:s");
-                $sql = "INSERT INTO user_history (user_id, login_date, login_time) VALUES (?, ?, ?)";
+                $sql = "INSERT INTO emp_history (user_id, login_date, login_time) VALUES (?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([$_SESSION['user_id'], $loginDate, $loginTime]);
 

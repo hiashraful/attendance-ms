@@ -18,37 +18,37 @@ $stmt->execute([$_SESSION['email']]);
 $user = $stmt->fetch();
 
 // Retrieve the user's total hours all time
-$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=?";
+$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id']]);
 $totalHours = $stmt->fetch();
 
 // Retrieve the user's total hours for the current month
-$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND MONTH(login_date)=?";
+$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND MONTH(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('m')]);
 $totalHoursMonth = $stmt->fetch();
 
 // Retrieve the user's total hours for the current year
-$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND YEAR(login_date)=?";
+$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND YEAR(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('Y')]);
 $totalHoursYear = $stmt->fetch();
 
 // Retrieve the user's total hours for the current week
-$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND YEARWEEK(login_date)=?";
+$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND YEARWEEK(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('YW')]);
 $totalHoursWeek = $stmt->fetch();
 
 // Retrieve the user's total hours for the current day
-$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND login_date=?";
+$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('Y-m-d')]);
 $totalHoursDay = $stmt->fetch();
 
 // Retrieve the user's total hours for the previous month
-$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND MONTH(login_date)=?";
+$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND MONTH(login_date)=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('m', strtotime('-1 month'))]);
 $totalHoursPrevMonth = $stmt->fetch();
