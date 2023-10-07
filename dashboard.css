@@ -8,6 +8,15 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
+:root {
+  --blue: #2a2185;
+  --white: #fff;
+  --gray: #f5f5f5;
+  --black1: #222;
+  --black2: #999;
+}
+
 body {
   background: #e2e2e2;
 }
@@ -224,4 +233,54 @@ table thead tr {
   background: #4ad489;
   color: #fff;
   transition: 0.5rem;
+}
+
+/* ======================= Cards ====================== */
+.container .main .cardBox {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 30px;
+}
+
+.container .main .cardBox .card {
+  position: relative;
+  background: var(--white);
+  padding: 30px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+}
+
+
+.container .main .cardBox .card .numbers {
+  position: relative;
+  font-weight: 500;
+  font-size: 2.5rem;
+  color: var(--blue);
+}
+
+.container .main  .cardBox .card .cardName {
+  color: var(--black2);
+  font-size: 1.1rem;
+  margin-top: 5px;
+}
+
+.container .main .cardBox .card .iconBx {
+  font-size: 3.5rem;
+  color: var(--black2);
+}
+
+.container .main .cardBox .card:hover {
+  background: #34af6d;
+  transition: 0.5s ease-in-out;
+}
+.container .main .cardBox .card:hover .numbers,
+.container .main .cardBox .card:hover .cardName,
+.container .main .cardBox .card:hover .iconBx {
+  color: var(--white);
 }

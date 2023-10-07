@@ -17,6 +17,42 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$_SESSION['email']]);
 $user = $stmt->fetch();
 
+// Retrieve the user's total hours all time
+$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user['id']]);
+$totalHours = $stmt->fetch();
+
+// Retrieve the user's total hours for the current month
+$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND MONTH(login_date)=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user['id'], date('m')]);
+$totalHoursMonth = $stmt->fetch();
+
+// Retrieve the user's total hours for the current year
+$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND YEAR(login_date)=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user['id'], date('Y')]);
+$totalHoursYear = $stmt->fetch();
+
+// Retrieve the user's total hours for the current week
+$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND YEARWEEK(login_date)=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user['id'], date('YW')]);
+$totalHoursWeek = $stmt->fetch();
+
+// Retrieve the user's total hours for the current day
+$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND login_date=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user['id'], date('Y-m-d')]);
+$totalHoursDay = $stmt->fetch();
+
+// Retrieve the user's total hours for the previous month
+$sql = "SELECT SUM(total_hours) AS total_hours FROM user_history WHERE user_id=? AND MONTH(login_date)=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user['id'], date('m', strtotime('-1 month'))]);
+$totalHoursPrevMonth = $stmt->fetch();
+
 ?>
 
 
@@ -32,7 +68,7 @@ $user = $stmt->fetch();
 <body>
     <!-- New Dashboard -->
     <div class="container">
-        <!-- Sidebar -->
+        <!-- ======================= Sidebar ================== -->
     <nav>
         <ul>
             <li>
@@ -87,10 +123,90 @@ $user = $stmt->fetch();
         <h1>Employee Management System</h1>
         <i class="fas fa-user-cog"></i>
       </div>
-      <div class="users">
+
+      <!-- ======================= Cards ================== -->
+      <div class="cardBox">
+          <div class="card">
+              <div>
+                  <div class="numbers"> 
+                    <?php 
+                      if ($totalHoursDay['total_hours'] == null) {
+                        echo 0;
+                      } else {
+                        echo $totalHoursDay['total_hours'];
+                      }
+                    ?>  
+                  </div>
+                  <div class="cardName">Hours Spent Today</div>
+              </div>
+
+              <div class="iconBx">
+                  <ion-icon name="eye-outline"></ion-icon>
+              </div>
+          </div>
+
+          <div class="card">
+              <div>
+                  <div class="numbers">
+                    <?php 
+                      if ($totalHoursWeek['total_hours'] == null) {
+                        echo 0;
+                      } else {
+                        echo $totalHoursWeek['total_hours'];
+                      }
+                    ?>
+                  </div>
+                  <div class="cardName">Hours Spent This Week</div>
+              </div>
+
+              <div class="iconBx">
+                  <ion-icon name="cart-outline"></ion-icon>
+              </div>
+          </div>
+
+          <div class="card">
+              <div>
+                  <div class="numbers">
+                    <?php 
+                      if ($totalHoursMonth['total_hours'] == null) {
+                        echo 0;
+                      } else {
+                        echo $totalHoursMonth['total_hours'];
+                      }
+                    ?>
+                  </div>
+                  <div class="cardName">Hours Spent This Month</div>
+              </div>
+
+              <div class="iconBx">
+                  <ion-icon name="chatbubbles-outline"></ion-icon>
+              </div>
+          </div>
+
+          <div class="card">
+              <div>
+                  <div class="numbers">$
+                    <?php 
+                      if ($totalHoursMonth['total_hours'] == null) {
+                        echo 0;
+                      } else {
+                        echo $totalHoursMonth['total_hours'] * 10;
+                      }
+                    ?>
+                  </div>
+                  <div class="cardName">Earnings This Month</div>
+              </div>
+
+              <div class="iconBx">
+                  <ion-icon name="cash-outline"></ion-icon>
+              </div>
+          </div>
+      </div>
+      <!-- Old Cards, will be removed later -->
+      <!-- <div class="users">
         <div class="card">
-          <img src="./img/dp.jpg">
-          <h4>Sam David</h4>
+          <img src="<?php echo $user['img'] ?>">
+          <h4>Hours Spent Today</h4>
           <p>Ui designer</p>
           <div class="per">
             <table>
@@ -160,12 +276,7 @@ $user = $stmt->fetch();
           </div>
           <button>Profile</button>
         </div>
-      </div>
-      <!-- Add New User -->
-      <!-- This section will be moved to add user page -->
-    
-
-      <!-- Add New User Ends Here -->
+      </div> -->
       <section class="attendance">
         <div class="attendance-list">
           <h1>Attendance List</h1>
