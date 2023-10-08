@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Moving Map Example</title>
+    <!-- Include Leaflet CSS and JavaScript -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <h1>Simple Moving Map</h1>
+    <div id="map" style="width: 600px; height: 450px"></div>
+
+    <script>
+      // Initialize the map
+      var map = L.map("map").setView([23.8050078, 90.3760265], 15);
+
+      // Add a circle with a radius (in meters) around the marker
+      var circle = L.circle([23.8050078, 90.3760265], {
+        color: "blue",
+        fillColor: "blue",
+        fillOpacity: 0.2,
+        radius: 500, // Adjust the radius as needed
+      }).addTo(map);
+
+      // Create a marker with an initial position
+      var marker = L.marker([23.8050078, 90.3760265]).addTo(map);
+
+      // Add a tooltip to the marker that is always visible
+      marker.bindTooltip("Ashraful Is Here", { permanent: true }).openTooltip();
+
+      // Define a set of coordinates to simulate movement
+      var coordinates = [
+        [23.8050078, 90.3760265],
+        [23.8051078, 90.3761265], // Move the marker slightly
+        // Add more coordinates as needed
+      ];
+
+      var index = 0;
+
+      function moveMarker() {
+        if (index < coordinates.length) {
+          // Update the marker's position
+          marker.setLatLng(coordinates[index]);
+          index++;
+          // Call moveMarker again after a delay
+        }
+    }
+    
+    // Start moving the marker
+    moveMarker();
+    setTimeout(moveMarker, 500); // Delay in milliseconds (2 seconds in this example)
+
+      // Add the OpenStreetMap tile layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+    </script>
+  </body>
+</html>

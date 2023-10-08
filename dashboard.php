@@ -7,6 +7,8 @@ if (!isset($_SESSION['email'])) {
 }
 
 $username = $_SESSION['username'];
+$userId = $_SESSION['user_id'];
+
 $sql = "SELECT * FROM emp WHERE email=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$_SESSION['email']]);
@@ -42,6 +44,21 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$user['id'], date('m', strtotime('-1 month'))]);
 $totalHoursPrevMonth = $stmt->fetch();
 
+//we can also make a query to get the location of the user from a specific date
+
+//from latest login
+$sql = "SELECT * FROM emp_history WHERE user_id=? AND login_date=? ORDER BY login_time DESC LIMIT 1";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$user['id'], date('Y-m-d')]);
+$location = $stmt->fetch();
+
+//user data for located emp
+$sql = "SELECT * FROM emp WHERE id=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$location['user_id']]);
+$userLocation = $stmt->fetch();
+
+
 $dataPoints = array(
     array("x" => 10, "y" => 41),
     array("x" => 20, "y" => 35, "indexLabel" => "Lowest"),
@@ -61,6 +78,15 @@ for ($i = 13; $i < 31; $i++) {
     $dataPoints[] = array("x" => ($i + 1) * 10, "y" => rand(30, 70));
 }
 
+// Show User Details
+$sql = "SELECT * FROM emp WHERE id = ?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$userId]);
+$row = $stmt->fetch();
+
+
+
+
 ?>
 
 
@@ -72,6 +98,11 @@ for ($i = 13; $i < 31; $i++) {
     <title>Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 <body>
     <!-- New Dashboard -->
@@ -101,6 +132,12 @@ for ($i = 13; $i < 31; $i++) {
                 <a class="nav-list-item" href="add.php">
                     <i class="fas fa-user-plus"></i>
                     <span class="nav-item">Add User</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-list-item" href="email.php">
+                    <i class="fas fa-database"></i>
+                    <span class="nav-item">Send Email</span>
                 </a>
             </li>
             <li>
@@ -145,6 +182,7 @@ for ($i = 13; $i < 31; $i++) {
                   <i class="fas fa-eye"></i>
               </div>
           </div>
+          
           <div class="card">
               <div>
                   <div class="numbers">
@@ -184,7 +222,7 @@ for ($i = 13; $i < 31; $i++) {
       </div>
       <!-- ======================= Bar Chart ================== -->
       <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-      <!-- ===================== Attendance List ================== -->
+      <!-- ===================== Now Online ================== -->
       <div class="attendance">
         <div class="attendance-list">
           <h1>Now Online</h1>
@@ -224,7 +262,8 @@ for ($i = 13; $i < 31; $i++) {
                         echo '<td>' . $user['login_date'] . '</td>';
                         echo '<td>' . $user['login_time'] . '</td>';
                         echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
-                        echo '<td><a href="user.php?id=' . $emp['id'] . '">Details</a></td>';
+                        echo '<td><button onclick="showDetails()"><i class="fa-solid fa-circle-info"></i></button>
+                            <button onclick="showMap()"><i class="fa-solid fa-location-dot"></i></button> </td>';
                         echo '</tr>';
                     }
                     ?>
@@ -232,26 +271,100 @@ for ($i = 13; $i < 31; $i++) {
           </table>
         </div>
       </div>
-
-
     </section>
-  </div>
+<!-- ======================= Show Location ================== -->
+    <section class="location" style="display: none;">
+        <h1>Last Location of: <?php echo $_SESSION['username']?> </h1>
+        <span class="cross">
+            <i class="fa-solid fa-rectangle-xmark" onclick="hideMap()"></i>
+        </span>
+        <div id="map" style="width: 600px; height: 450px"></div>
+    </section>
+    <!-- ======================= Show Details ================== -->
+    <section class="details" style="display: none;">
+        <h1>Details of: <?php echo $_SESSION['username']?> </h1>
+        <span class="cross">
+            <i class="fa-solid fa-rectangle-xmark" onclick="hideDetails()"></i>
+        </span>
+        <div class="info">
+            <div class="img">
+                <img src="<?php echo $row['img'] ?>" alt="Photo of <?php echo $row['name'] ?> " width="150px">
+            </div>
+            <label for="user-name">ID: </label> 
+            <input type="text" name="user-id" value="<?php echo $row['id'] ?>" disabled > <br>
+            <label for="user-name">Name: </label> 
+            <input type="text" name="user-name" value="<?php echo $row['name'] ?>" disabled > <br>
+            <label for="user-designation">Designation: </label> 
+            <input type="text" name="user-designation" value="<?php echo $row['designation'] ?>" disabled> <br>
+            <label for="user-salary">Salary: </label> 
+            <input type="text" name="user-salary" value="<?php echo $row['salary'] ?>" disabled> <br>
+            <label for="user-email">Email: </label>
+            <input type="email" name="user-email" value="<?php echo $row['email'] ?>" disabled> <br>
+        </div>
+    </section>
+</div>
 
-  <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <!-- ======================= Show Location ================== -->
     <script>
-        setTimeout(function() {
-            var loginMessage = document.getElementById('login-success');
-            if (loginMessage) {
-                loginMessage.style.display = 'none';
+        var main = document.querySelector(".main");
+        function showMap() {
+            document.querySelector(".location").style.display = "block";
+            main.style.opacity = '0.1';
+            var map = L.map("map").setView([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>], 14);
+            //lookup for zoom level
+            var marker = L.marker([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>]).addTo(map);
+            var circle = L.circle([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>], {
+                color: "green",
+                fillColor: "#cccff",
+                fillOpacity: 0.2,
+                radius: 500,
+            }).addTo(map);
+
+            L.marker([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>], {icon: L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+            iconSize: [25, 41], // Adjust the size as needed
+            iconAnchor: [12, 41],
+            popupAnchor: [0, -30] // Adjust the anchor point if necessary
+        })})
+                .addTo(map)
+                .bindPopup("<?php if ($userLocation['name'] == null) {echo 0;} else {echo $userLocation['name'];}?> was here<br>logged in at <?php if ($location['login_time'] == null) {echo 0;} else {echo date('h:i A', strtotime($location['login_time']));}?>")
+                .openPopup();
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            }).addTo(map);
+            }
+            function hideMap() {
+                document.querySelector(".location").style.display = "none";
+                main.style.opacity = '1';
+            }
+    </script>
+    <!-- ======================= Show Details ================== -->
+    <script>
+        function showDetails() {
+            document.querySelector(".details").style.display = "block";
+            main.style.opacity = '0.1';
+        }
+        function hideDetails() {
+            document.querySelector(".details").style.display = "none";
+            main.style.opacity = '1';
+        }
+    </script>
+    <!-- ======================= Chart ================== -->
+    <script>
+      setTimeout(function() {
+          var loginMessage = document.getElementById('login-success');
+          if (loginMessage) {
+              loginMessage.style.display = 'none';
             }
         }, 1500);
         window.onload = function () {
 
-        var chart = new CanvasJS.Chart("chartContainer", {
-        animationEnabled: true,
-        exportEnabled: true,
-        theme: "light1",
-        title:{
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                exportEnabled: true,
+                theme: "light1",
+                title:{
             text: "Hours Spent This Month"
         },
         axisY:{
@@ -266,8 +379,9 @@ for ($i = 13; $i < 31; $i++) {
         });
         chart.render();
 
-    }
+        }
     </script>
     <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 </body>
 </html>

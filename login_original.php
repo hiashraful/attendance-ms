@@ -1,7 +1,7 @@
 <?php
 session_start();
 include "connect.php";
-date_default_timezone_set('Asia/Dhaka');
+
 if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
 
     function validate($data)
@@ -33,25 +33,11 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['username'] = $row['name'];
 
-                // Get user's IP address
-                $userIP = $_SERVER['REMOTE_ADDR'];
-
-                // Use an IP geolocation API to get city name based on the user's IP address
-                $ipInfo = json_decode(file_get_contents("http://ipinfo.io/{$userIP}/json"));
-                $cityName = $ipInfo->city;
-
-                // Retrieve and store latitude and longitude from the client-side
-                $latitude = $_POST['latitude'];
-                $longitude = $_POST['longitude'];
-                $latitude = (float) $latitude;
-                $longitude = (float) $longitude;
-
-                // Insert user location data into the database
                 $loginDate = date("Y-m-d"); 
                 $loginTime = date("H:i:s");
-                $sql = "INSERT INTO emp_history (user_id, login_date, login_time, user_ip, city_name, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO emp_history (user_id, login_date, login_time) VALUES (?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$_SESSION['user_id'], $loginDate, $loginTime, $userIP, $cityName, $latitude, $longitude]);
+                $stmt->execute([$_SESSION['user_id'], $loginDate, $loginTime]);
 
                 header("Location: dashboard.php");
                 exit();
@@ -69,4 +55,39 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
     header("Location: index.php");
     exit();
 }
+
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loggin in...</title>
+</head>
+<body>
+    
+    <!-- ====================== Location Script ====================== -->
+    <script>
+        if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
+        // Send the coordinates and user's IP address to a PHP script
+        var userIP = '<?php echo $_SERVER['REMOTE_ADDR']; ?>'; // Get the user's IP
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "login.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Handle the response from the server if needed
+                console.log(xhr.responseText);
+            }
+        };
+        xhr.send("latitude=" + latitude + "&longitude=" + longitude + "&userIP=" + userIP);
+    });
+}
+    </script>
+</body>
+</html>

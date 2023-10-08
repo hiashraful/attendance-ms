@@ -1,6 +1,12 @@
 <?php
+session_start();
 if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
     $logoutMessage = "Log out successful!";
+}
+
+if (isset($_SESSION['email'])) {
+    header("Location: dashboard.php");
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -34,9 +40,25 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
                 <input type="password" name="u_password" id="password" placeholder="Enter password" required>
                 <i class='bx bxs-lock'></i>
             </div>
+            <!-- Location data -->
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
             <input type="submit" name="submit" value="Log In" id="login-btn">
         </div>
     </form>
+    <! -- ====================== Location Script ====================== -->
+    <script>
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            document.getElementsByName("latitude")[0].value = latitude;
+            document.getElementsByName("longitude")[0].value = longitude;
+            });
+        } else {
+            console.log("Browser doesn't support geolocation!");
+        }
+    </script>
     <script>
         setTimeout(function() {
             var errorMessage = document.getElementById('error');
@@ -48,6 +70,24 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
                 logoutMessage.style.display = 'none';
             }
         }, 2000);
+    </script>
+    <!-- ====================== Location Script ====================== -->
+    <script>
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+        
+            $.ajax({
+                type : "POST",  //type of method
+                url  : "location.php",  //your page
+                data : { latitude : latitude, longitude : longitude},// passing the values
+                success: function(res){  
+                                        console.log("success");
+                        }
+            });
+        });
+    }
     </script>
 </body>
 </html>

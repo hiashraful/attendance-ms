@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map Example with Marker and Circle</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <h1>My Simple Map with Marker and Circle</h1>
+    <div id="map" style="width: 600px; height: 450px"></div>
+
+    <script>
+      var map = L.map("map").setView([23.8050078, 90.3760265], 15);
+      var marker = L.marker([23.8050078, 90.3760265]).addTo(map);
+      var circle = L.circle([23.8050078, 90.3760265], {
+        color: "green",
+        fillColor: "#cccff",
+        fillOpacity: 0.2,
+        radius: 500,
+      }).addTo(map);
+      L.marker([23.8050078, 90.3760265])
+        .addTo(map)
+        .bindPopup("Ashraful was here.<br> when logged in.")
+        .openPopup();
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+    </script>
+  </body>
+</html>

@@ -222,18 +222,18 @@ table thead tr {
 .table tbody tr:last-of-type {
   border-bottom: 2px solid #4ad489;
 }
-.table td a {
+.table td button {
   position: relative;
-  width: 280px;
+  width: 100px;
   font-size: 14px;
-  padding: 10px 20px;
+  padding: 12px 40px 5px 40px;
   color: white;
   background-color: #4ad489;
   border-radius: 10px;
+  cursor: pointer;
 }
-.table td a:hover {
+.table td button:hover {
   background: #34af6d;
-  color: #fff;
   transition: 0.5rem;
 }
 .table tbody tr:hover {
@@ -241,7 +241,17 @@ table thead tr {
   transition: 0.3s;
   cursor: pointer;
 }
+.table td button:hover .fa-location-dot,
+.table td button:hover .fa-circle-info {
+  transition: 0.5s;
+  color: #a80505;
+}
 
+.table td button .fa-location-dot,
+.fa-circle-info {
+  color: #fff;
+  font-size: 24px;
+}
 /* ======================= Cards ====================== */
 .container .main .cardBox {
   position: relative;
@@ -289,4 +299,78 @@ table thead tr {
 .container .main .cardBox .card:hover .cardName,
 .container .main .cardBox .card:hover .iconBx {
   color: var(--white);
+}
+
+/* ======================= Map & User Details ====================== */
+.location, .details {
+  width: 700px;
+  position: absolute;
+  top: 120px;
+  left: 600px;
+  padding: 50px;
+  transform: scale(0);
+  opacity: 0;
+  background-color: #f3f3f3;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  animation: scaleAndFadeIn 1s ease-in-out forwards;
+}
+
+.location h1, .details h1 {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+@keyframes scaleAndFadeIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.cross {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  padding: 10px;
+  width: 40px;
+  cursor: pointer;
+}
+.fa-rectangle-xmark {
+  font-size: 25px;
+  color: #4caf50;
+}
+
+.fa-rectangle-xmark:hover {
+  color: red;
+}
+
+/* ======================= User Details ====================== */
+.info{
+  text-align: center;
+}
+.info label{
+  font-size: 15px;
+  font-weight: 500;
+  margin-right: 10px;
+}
+.info input[type="text"]{
+  width: 220px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+}
+.info .img img{
+  border-radius: 50%;
+  margin-bottom: 20px;
 }

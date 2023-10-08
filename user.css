@@ -114,7 +114,7 @@ input[type="submit"]:hover {
   cursor: pointer;
 }
 
-.profile {
+.profile{
   width: 1200px;
   height: 70vh;
   margin: 60px auto;
@@ -124,6 +124,24 @@ input[type="submit"]:hover {
   justify-content: first baseline;
   background-color: #f1f1f1;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.add-user{
+  width: 1200px;
+  height: 70vh;
+  margin: 60px auto;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  padding: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.add-user h1{
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .profile .sidebar {

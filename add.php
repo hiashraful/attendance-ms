@@ -45,11 +45,12 @@ if (isset($_POST['user-name'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New User</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="user.css">
 </head>
 <body>
     <div class="container">
-    <section class="add-user">
+        <a href="dashboard.php"><i class="fas fa-home"></i>Home</a>
+        <section class="add-user">
         <form method="POST" enctype="multipart/form-data">
             <h1>Add New User</h1>
             <label for="user-name">Name: </label>
@@ -64,7 +65,7 @@ if (isset($_POST['user-name'])) {
             <input type="password" name="user-password"> <br>
             <label for="user-image">Image: </label>
             <input type="file" name="image" accept="image/*" required> <br>
-            <input type="submit" value="Upload">
+            <input type="submit" value="Submit">
         </form>
     </section>
     </div>
