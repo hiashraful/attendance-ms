@@ -29,9 +29,10 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
         if ($stmt->rowCount() === 1) {
             $row = $stmt->fetch();
             if ($row['email'] === $email && $row['password'] === $password) {
-                $_SESSION['user_id'] = $row['id']; 
+                $_SESSION['user_id'] = $row['id'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['username'] = $row['name'];
+                $_SESSION['role'] = $row['role'];
 
                 // Get user's IP address
                 $userIP = $_SERVER['REMOTE_ADDR'];
@@ -47,7 +48,7 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
                 $longitude = (float) $longitude;
 
                 // Insert user location data into the database
-                $loginDate = date("Y-m-d"); 
+                $loginDate = date("Y-m-d");
                 $loginTime = date("H:i:s");
                 $sql = "INSERT INTO emp_history (user_id, login_date, login_time, user_ip, city_name, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
@@ -69,4 +70,3 @@ if (isset($_POST['u_email']) && isset($_POST['u_password'])) {
     header("Location: index.php");
     exit();
 }
-?>

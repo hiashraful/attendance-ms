@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Dhaka');
 
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");

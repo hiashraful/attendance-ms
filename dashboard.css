@@ -222,7 +222,7 @@ table thead tr {
 .table tbody tr:last-of-type {
   border-bottom: 2px solid #4ad489;
 }
-.table td button {
+.table td a {
   position: relative;
   width: 100px;
   font-size: 14px;
@@ -232,7 +232,7 @@ table thead tr {
   border-radius: 10px;
   cursor: pointer;
 }
-.table td button:hover {
+.table td a:hover {
   background: #34af6d;
   transition: 0.5rem;
 }
@@ -241,16 +241,25 @@ table thead tr {
   transition: 0.3s;
   cursor: pointer;
 }
-.table td button:hover .fa-location-dot,
-.table td button:hover .fa-circle-info {
+.table td a:hover .fa-location-dot,
+.table td a:hover .fa-circle-info,
+.table td a:hover .fa-envelope {
   transition: 0.5s;
   color: #a80505;
 }
 
-.table td button .fa-location-dot,
+.fa-location-dot{
+  color: #fff;
+  font-size: 20px;
+}
+
 .fa-circle-info {
   color: #fff;
-  font-size: 24px;
+  font-size: 20px;
+}
+.table .fa-envelope{
+  color: #fff;
+  font-size: 20px;
 }
 /* ======================= Cards ====================== */
 .container .main .cardBox {
@@ -302,7 +311,7 @@ table thead tr {
 }
 
 /* ======================= Map & User Details ====================== */
-.location, .details {
+.location, .details, .email {
   width: 700px;
   position: absolute;
   top: 120px;
@@ -316,7 +325,7 @@ table thead tr {
   animation: scaleAndFadeIn 1s ease-in-out forwards;
 }
 
-.location h1, .details h1 {
+.location h1, .details h1, .email h1 {
   font-size: 20px;
   font-weight: 400;
   margin-bottom: 20px;
@@ -374,3 +383,32 @@ table thead tr {
   border-radius: 50%;
   margin-bottom: 20px;
 }
+
+/* ======================= Email ====================== */
+
+.email input[type="email"],
+.email input[type="text"],
+.email textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.email textarea {
+  resize: none;
+}
+.email input[type="submit"] {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.email input[type="submit"]:hover {
+  background-color: #3e8e41;
+}
+
+/* ======================= Admin User Separate ====================== */

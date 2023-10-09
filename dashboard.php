@@ -1,91 +1,75 @@
 <?php
 require 'connect.php';
 session_start();
+date_default_timezone_set('Asia/Dhaka');
 if (!isset($_SESSION['email'])) {
     header("Location: index.php");
     exit();
 }
 
+if (isset($_GET['detail'])) {
+    $detail = $_GET['detail'];
+    $sql = "SELECT * FROM emp WHERE id=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$detail]);
+    $target = $stmt->fetch();
+}
+if (isset($_GET['location'])) {
+    $locationId = $_GET['location'];
+    $sql = "SELECT *
+            FROM emp_history
+            WHERE user_id = ?
+            AND logout_time IS NULL
+            ORDER BY login_time DESC
+            LIMIT 1;
+            ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$locationId]);
+    $location = $stmt->fetch();
+
+    $sql = "SELECT * FROM emp WHERE id=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$location['user_id']]);
+    $userLocation = $stmt->fetch();
+}
+if (isset($_GET['email'])) {
+    $email = $_GET['email'];
+    $sql = "SELECT * FROM emp WHERE id=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$email]);
+    $emailUser = $stmt->fetch();
+}
+
 $username = $_SESSION['username'];
 $userId = $_SESSION['user_id'];
+$userEmail = $_SESSION['email'];
+
 
 $sql = "SELECT * FROM emp WHERE email=?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$_SESSION['email']]);
 $user = $stmt->fetch();
 
-$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$user['id']]);
-$totalHours = $stmt->fetch();
-
 $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND MONTH(login_date)=?";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$user['id'], date('m')]);
+$stmt->execute([$userId, date('m')]);
 $totalHoursMonth = $stmt->fetch();
 
-$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND YEAR(login_date)=?";
+$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id = ? AND login_date = ?;";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$user['id'], date('Y')]);
-$totalHoursYear = $stmt->fetch();
-
-$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND YEARWEEK(login_date)=?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$user['id'], date('YW')]);
-$totalHoursWeek = $stmt->fetch();
-
-$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$user['id'], date('Y-m-d')]);
+$stmt->execute([$userId, date('Y-m-d')]);
 $totalHoursDay = $stmt->fetch();
-
-$sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND MONTH(login_date)=?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$user['id'], date('m', strtotime('-1 month'))]);
-$totalHoursPrevMonth = $stmt->fetch();
 
 //we can also make a query to get the location of the user from a specific date
 
 //from latest login
-$sql = "SELECT * FROM emp_history WHERE user_id=? AND login_date=? ORDER BY login_time DESC LIMIT 1";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$user['id'], date('Y-m-d')]);
-$location = $stmt->fetch();
-
-//user data for located emp
-$sql = "SELECT * FROM emp WHERE id=?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$location['user_id']]);
-$userLocation = $stmt->fetch();
-
-
-$dataPoints = array(
-    array("x" => 10, "y" => 41),
-    array("x" => 20, "y" => 35, "indexLabel" => "Lowest"),
-    array("x" => 30, "y" => 50),
-    array("x" => 40, "y" => 45),
-    array("x" => 50, "y" => 52),
-    array("x" => 60, "y" => 68),
-    array("x" => 70, "y" => 38),
-    array("x" => 80, "y" => 71, "indexLabel" => "Highest"),
-    array("x" => 90, "y" => 52),
-    array("x" => 100, "y" => 60),
-    array("x" => 110, "y" => 36),
-    array("x" => 120, "y" => 49),
-    array("x" => 130, "y" => 41),
-);
-for ($i = 13; $i < 31; $i++) {
-    $dataPoints[] = array("x" => ($i + 1) * 10, "y" => rand(30, 70));
-}
 
 // Show User Details
 $sql = "SELECT * FROM emp WHERE id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$userId]);
 $row = $stmt->fetch();
-
-
-
 
 ?>
 
@@ -103,207 +87,350 @@ $row = $stmt->fetch();
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
     />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- New Dashboard -->
     <div class="container">
-        <!-- ======================= Sidebar ================== -->
-    <nav>
-        <ul>
-            <li>
-                <a href="user.php?single=<?php echo $username ?>" class="logo">
-                    <img src="<?php echo $user['img'] ?>" alt="">
-                    <p class="user-name"><?php echo $username ?></p>
-                </a>
-            </li>
-            <li>
-                <a class="nav-list-item" href="#">
-                    <i class="fas fa-comment"></i>
-                    <span class="nav-item">Notification</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-list-item" href="#">
-                <i class="fas fa-users"></i>
-                    <span class="nav-item">Users</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-list-item" href="add.php">
-                    <i class="fas fa-user-plus"></i>
-                    <span class="nav-item">Add User</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-list-item" href="email.php">
-                    <i class="fas fa-database"></i>
-                    <span class="nav-item">Send Email</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-list-item" href="#">
-                    <i class="fas fa-database"></i>
-                    <span class="nav-item">Report</span>
-                </a>
-            </li>
-            <li>
-                <a class="nav-list-item" href="user.php">
-                    <i class="fas fa-cog"></i>
-                    <span class="nav-item">Setting</span>
-                </a>
-            </li>
+            <!-- ======================= Sidebar ================== -->
+        <nav>
+            <ul>
+                <li>
+                    <a href="user.php?single=<?php echo $username ?>" class="logo">
+                        <img src="<?php echo $user['img'] ?>" alt="">
+                        <p class="user-name"><?php echo $username ?></p>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-list-item" href="#">
+                        <i class="fas fa-comment"></i>
+                        <span class="nav-item">Notification</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-list-item" href="showUser.php">
+                    <i class="fas fa-users"></i>
+                        <span class="nav-item">Users</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-list-item" href="add.php">
+                        <i class="fas fa-user-plus"></i>
+                        <span class="nav-item">Add User</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-list-item" href="email.php">
+                        <i class="fas fa-envelope"></i>
+                        <span class="nav-item">Send Email</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-list-item" href="#">
+                        <i class="fas fa-database"></i>
+                        <span class="nav-item">Report</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-list-item" href="user.php">
+                        <i class="fas fa-cog"></i>
+                        <span class="nav-item">Setting</span>
+                    </a>
+                </li>
 
-            <li>
-                <a  href="logout.php" class="logout">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span class="nav-item">Log out</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
+                <li>
+                    <a  href="logout.php" class="logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="nav-item">Log out</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
 
-    <section class="main">
-      <div class="main-top">
-        <h1>Employee Management System</h1>
-        <i class="fas fa-user-cog"></i>
-      </div>
+        <section class="main">
+        <div class="main-top">
+            <h1>Employee Management System</h1>
+            <i class="fas fa-user-cog"></i>
+        </div>
 
-      <!-- ======================= Cards ================== -->
-      <div class="cardBox">
-          <div class="card">
-              <div>
-                  <div class="numbers">
-                    <?php if ($totalHoursDay['total_hours'] == null) {echo 0;} else {echo $totalHoursDay['total_hours'];}?>
-                  </div>
-                  <div class="cardName">Hours Spent Today</div>
-              </div>
-              <div class="iconBx">
-                  <i class="fas fa-eye"></i>
-              </div>
-          </div>
-          
-          <div class="card">
-              <div>
-                  <div class="numbers">
-                    <?php if ($totalHoursWeek['total_hours'] == null) {echo 0;} else {echo $totalHoursWeek['total_hours'];}?>
-                  </div>
-                  <div class="cardName">Hours Spent This Week</div>
-              </div>
-
-              <div class="iconBx">
-                  <ion-icon name="cart-outline"></ion-icon>
-                  <i class="fas fa-clock"></i>
-              </div>
-          </div>
-
-          <div class="card">
-              <div>
-                  <div class="numbers">
-                    <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'];}?>
-                  </div>
-                  <div class="cardName">Hours Spent This Month</div>
-              </div>
-              <div class="iconBx">
-                <i class="fa-solid fa-calendar-check"></i>
-              </div>
-          </div>
-          <div class="card">
-              <div>
-                <div class="numbers">$
-                    <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'] * 10;}?>
+        <!-- ======================= Cards for user ================== -->
+        <div class="cardBox user" style="display: none;">
+            <div class="card">
+                <div>
+                    <div class="numbers">
+                        <!-- first login time today -->
+                        <?php
+                            $sql = "SELECT * FROM emp_history WHERE user_id=? AND login_date=? ORDER BY login_time ASC LIMIT 1";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute([$user['id'], date('Y-m-d')]);
+                            $today = $stmt->fetch();
+                            if (isset($today['login_time']) == null) {
+                                echo '00:00:00';
+                            } else {
+                                echo date('h:i A', strtotime($today['login_time']));
+                            }
+                            ?>
+                    </div>
+                    <div class="cardName">Logged In Today</div>
                 </div>
-                <div class="cardName">Earnings This Month</div>
-              </div>
-              <div class="iconBx">
-                  <i class="fas fa-money-check-dollar"></i>
-              </div>
-          </div>
-      </div>
-      <!-- ======================= Bar Chart ================== -->
-      <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-      <!-- ===================== Now Online ================== -->
-      <div class="attendance">
-        <div class="attendance-list">
-          <h1>Now Online</h1>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Designation</th>
-                <th>Date</th>
-                <th>Join Time</th>
-                <th>Hours Today</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-                    $sql = "SELECT * FROM emp_history WHERE logout_time IS NULL";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute();
-                    $users = $stmt->fetchAll();
 
-                    foreach ($users as $user) {
-                        $sql = "SELECT * FROM emp WHERE id=?";
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute([$user['user_id']]);
-                        $emp = $stmt->fetch();
-
-                        $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute([$emp['id'], date('Y-m-d')]);
-                        $totalHoursDay = $stmt->fetch();
-                        echo '<tr>';
-                        echo '<td>' . $emp['id'] . '</td>';
-                        echo '<td>' . $emp['name'] . '</td>';
-                        echo '<td>' . $emp['designation'] . '</td>';
-                        echo '<td>' . $user['login_date'] . '</td>';
-                        echo '<td>' . $user['login_time'] . '</td>';
-                        echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
-                        echo '<td><button onclick="showDetails()"><i class="fa-solid fa-circle-info"></i></button>
-                            <button onclick="showMap()"><i class="fa-solid fa-location-dot"></i></button> </td>';
-                        echo '</tr>';
-                    }
-                    ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-<!-- ======================= Show Location ================== -->
-    <section class="location" style="display: none;">
-        <h1>Last Location of: <?php echo $_SESSION['username']?> </h1>
-        <span class="cross">
-            <i class="fa-solid fa-rectangle-xmark" onclick="hideMap()"></i>
-        </span>
-        <div id="map" style="width: 600px; height: 450px"></div>
-    </section>
-    <!-- ======================= Show Details ================== -->
-    <section class="details" style="display: none;">
-        <h1>Details of: <?php echo $_SESSION['username']?> </h1>
-        <span class="cross">
-            <i class="fa-solid fa-rectangle-xmark" onclick="hideDetails()"></i>
-        </span>
-        <div class="info">
-            <div class="img">
-                <img src="<?php echo $row['img'] ?>" alt="Photo of <?php echo $row['name'] ?> " width="150px">
+                <div class="iconBx">
+                    <ion-icon name="cart-outline"></ion-icon>
+                    <i class="fas fa-clock"></i>
+                </div>
             </div>
-            <label for="user-name">ID: </label> 
-            <input type="text" name="user-id" value="<?php echo $row['id'] ?>" disabled > <br>
-            <label for="user-name">Name: </label> 
-            <input type="text" name="user-name" value="<?php echo $row['name'] ?>" disabled > <br>
-            <label for="user-designation">Designation: </label> 
-            <input type="text" name="user-designation" value="<?php echo $row['designation'] ?>" disabled> <br>
-            <label for="user-salary">Salary: </label> 
-            <input type="text" name="user-salary" value="<?php echo $row['salary'] ?>" disabled> <br>
-            <label for="user-email">Email: </label>
-            <input type="email" name="user-email" value="<?php echo $row['email'] ?>" disabled> <br>
-        </div>
-    </section>
-</div>
+            <div class="card">
+                <div>
+                    <div class="numbers">
+                        <?php if ($totalHoursDay['total_hours'] == null) {echo 0;} else {echo $totalHoursDay['total_hours'];}?>
+                    </div>
+                    <div class="cardName">Time Registered Today</div>
+                </div>
+                <div class="iconBx">
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
 
+            <div class="card">
+                <div>
+                    <div class="numbers">
+                        <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'];}?>
+                    </div>
+                    <div class="cardName">Hours Spent This Month</div>
+                </div>
+                <div class="iconBx">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+            </div>
+            <div class="card">
+                <div>
+                    <div class="numbers">$
+                        <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'] * 10;}?>
+                    </div>
+                    <div class="cardName">Earnings This Month</div>
+                </div>
+                <div class="iconBx">
+                    <i class="fas fa-money-check-dollar"></i>
+                </div>
+            </div>
+        </div>
+        <!-- ======================= Cards for admin ================== -->
+        <div class="cardBox admin" style="display: none;">
+            <div class="card">
+                <div>
+                    <div class="numbers">
+                        <?php
+                            $sql = "SELECT * FROM emp";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute();
+                            $totalEmp = $stmt->rowCount();
+                            echo $totalEmp;
+                            ?>
+                    </div>
+                    <div class="cardName">Total Employee</div>
+                </div>
+                <div class="iconBx">
+                    <i class="fas fa-eye"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers">
+                    <?php
+                        $sql = "SELECT COUNT(DISTINCT user_id) 
+                        FROM emp_history 
+                        WHERE login_time > '17:00:00' 
+                        AND login_date = CURDATE()";
+                
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute();
+                        $count = $stmt->fetchColumn();
+                        echo $count;
+                    ?>
+                    </div>
+                    <div class="cardName">Late Today</div>
+                </div>
+
+                <div class="iconBx">
+                    <ion-icon name="cart-outline"></ion-icon>
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="numbers">
+                    <!-- employees who are online -->
+                    <?php
+                            $sql = "SELECT eh.*
+                            FROM emp_history eh
+                            JOIN (
+                                SELECT user_id, MAX(login_time) AS latest_login_time
+                                FROM emp_history
+                                WHERE logout_time IS NULL
+                                GROUP BY user_id
+                            ) latest_login
+                            ON eh.user_id = latest_login.user_id AND eh.login_time = latest_login.latest_login_time;";
+
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute();
+                            $online = $stmt->rowCount();
+                            echo $online;
+                            ?>
+                    </div>
+                    <div class="cardName">Now Online</div>
+                </div>
+                <div class="iconBx">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+            </div>
+            <div class="card">
+                <div>
+                    <div class="numbers">
+                    <!-- Total Work Hours This Month -->
+                    <?php
+                        $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE MONTH(login_date)=?";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute([date('m')]);
+                        $totalHoursMonth = $stmt->fetch();
+                        echo $totalHoursMonth['total_hours'] * 10;
+                        ?>
+                    hrs</div>
+                    <div class="cardName">Work Hours This Month</div>
+                </div>
+                <div class="iconBx">
+                    <i class="fas fa-money-check-dollar"></i>
+                </div>
+            </div>
+        </div>
+        <!-- ======================= Bar Chart ================== -->
+        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+        <!-- ===================== Now Online ================== -->
+        <div class="attendance">
+            <div class="attendance-list">
+            <h1>Now Online</h1>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Designation</th>
+                    <th>Date</th>
+                    <th>Join Time</th>
+                    <th>Hours Today</th>
+                    <th>Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                        $sql = "SELECT eh.*
+                        FROM emp_history eh
+                        JOIN (
+                            SELECT user_id, MAX(login_time) AS latest_login_time
+                            FROM emp_history
+                            WHERE logout_time IS NULL
+                            GROUP BY user_id
+                        ) latest_login
+                        ON eh.user_id = latest_login.user_id AND eh.login_time = latest_login.latest_login_time;";
+
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute();
+                        $users = $stmt->fetchAll();
+
+                        foreach ($users as $user) {
+                            $sql = "SELECT * FROM emp WHERE id=?";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute([$user['user_id']]);
+                            $emp = $stmt->fetch();
+
+                            $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute([$emp['id'], date('Y-m-d')]);
+                            $totalHoursDay = $stmt->fetch();
+                            echo '<tr>';
+                            echo '<td>' . $emp['id'] . '</td>';
+                            echo '<td>' . $emp['name'] . '</td>';
+                            echo '<td>' . $emp['designation'] . '</td>';
+                            echo '<td>' . $user['login_date'] . '</td>';
+                            echo '<td>' . $user['login_time'] . '</td>';
+                            echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
+                            echo '<td>
+                                <a href="showUser.php?detail=' . $emp['id'] . ' "><i class="fa-solid fa-circle-info"></i></a>
+                                <a href="showUser.php?location=' . $emp['id'] . ' "><i class="fa-solid fa-location-dot"></i></a>
+                                <a href="showUser.php?email=' . $emp['id'] . ' "><i class="fa-solid fa-envelope"></i></a>
+                                </td>';
+                            echo '</tr>';
+                        }
+                        ?>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        </section>
+        <!-- ======================= Show Location ================== -->
+        <section class="location" style="display: none;">
+            <h1>Last Location of: <?php echo $userLocation['name'] ?> </h1>
+            <span class="cross">
+                <i class="fa-solid fa-rectangle-xmark" onclick="hideMap()"></i>
+            </span>
+            <div id="map" style="width: 600px; height: 450px"></div>
+        </section>
+        <!-- ======================= Send Email ================== -->
+        <div class="email" style="display: none;">
+            <h1>Send an email to: <?php echo $emailUser['name'] ?> </h1>
+            <span class="cross">
+                <i class="fa-solid fa-rectangle-xmark" onclick="hideEmail()"></i>
+            </span>
+            <div class="send">
+                <form action="email.php" method="post">
+                    <input type="email" name="email" value="<?php echo $emailUser['email'] ?>">
+                    <input type="text" name="subject" placeholder="Enter subject">
+                    <textarea name="message" id="" cols="30" rows="10" placeholder="Enter message"></textarea>
+                    <input type="submit" name="send" value="Send">
+                </form>
+            </div>
+        </div>
+
+        <!-- ======================= Show Details ================== -->
+        <section class="details" style="display: none;">
+            <h1>Details of: <?php echo $target['name'] ?> </h1>
+            <span class="cross">
+                <i class="fa-solid fa-rectangle-xmark" onclick="hideDetails()"></i>
+            </span>
+            <div class="info">
+                <div class="img">
+                    <img src="<?php echo $target['img'] ?>" alt="Photo of <?php echo $target['name'] ?> " width="150px">
+                </div>
+                <label for="user-name">ID: </label>
+                <input type="text" name="user-id" value="<?php echo $target['id'] ?>" disabled > <br>
+                <label for="user-name">Name: </label>
+                <input type="text" name="user-name" value="<?php echo $target['name'] ?>" disabled > <br>
+                <label for="user-designation">Designation: </label>
+                <input type="text" name="user-designation" value="<?php echo $target['designation'] ?>" disabled> <br>
+                <label for="user-salary">Salary: </label>
+                <input type="text" name="user-salary" value="<?php echo $target['salary'] ?>" disabled> <br>
+                <label for="user-email">Email: </label>
+                <input type="text" name="user-email" value="<?php echo $target['email'] ?>" disabled> <br>
+            </div>
+        </section>
+    </div>
+    <!-- ======================= Send Email ================== -->
+    <script>
+        var main = document.querySelector(".main");
+        function sendEmail() {
+            document.querySelector(".email").style.display = "block";
+            main.style.opacity = '0.1';
+        }
+        function hideEmail() {
+            document.querySelector(".email").style.display = "none";
+            main.style.opacity = '1';
+        }
+        <?php if (isset($_GET['email'])) {?>
+            sendEmail();
+        <?php }?>
+    </script>
     <!-- ======================= Show Location ================== -->
     <script>
         var main = document.querySelector(".main");
@@ -338,9 +465,13 @@ $row = $stmt->fetch();
                 document.querySelector(".location").style.display = "none";
                 main.style.opacity = '1';
             }
+            <?php if (isset($_GET['location'])) {?>
+                showMap();
+            <?php }?>
     </script>
     <!-- ======================= Show Details ================== -->
     <script>
+        var main = document.querySelector(".main");
         function showDetails() {
             document.querySelector(".details").style.display = "block";
             main.style.opacity = '0.1';
@@ -349,39 +480,71 @@ $row = $stmt->fetch();
             document.querySelector(".details").style.display = "none";
             main.style.opacity = '1';
         }
+        <?php if (isset($_GET['detail'])) {?>
+            showDetails();
+        <?php }?>
     </script>
     <!-- ======================= Chart ================== -->
     <script>
-      setTimeout(function() {
-          var loginMessage = document.getElementById('login-success');
-          if (loginMessage) {
-              loginMessage.style.display = 'none';
-            }
-        }, 1500);
         window.onload = function () {
 
-            var chart = new CanvasJS.Chart("chartContainer", {
-                animationEnabled: true,
-                exportEnabled: true,
-                theme: "light1",
-                title:{
-            text: "Hours Spent This Month"
-        },
-        axisY:{
-            includeZero: true
-        },
-        data: [{
-            type: "column",
-            indexLabelFontColor: "#5A5757",
-            indexLabelPlacement: "outside",
-            dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-        }]
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title:{
+                text: "Total Hours Worked This Month"
+            },
+            axisY: {
+                title: "Hours Worked"
+            },
+            data: [{        
+                type: "column",  
+                showInLegend: true, 
+                legendMarkerColor: "grey",
+                legendText: "Employees",
+                dataPoints: [      
+                    <?php
+                        $sql = "SELECT emp.name AS employee_name, SUM(eh.total_hours) AS total_hours
+                        FROM emp
+                        LEFT JOIN emp_history eh ON emp.id = eh.user_id
+                        WHERE MONTH(eh.login_date) = ? 
+                        GROUP BY emp.id";
+                
+                        $stmt = $pdo->prepare($sql);
+                        $currentMonth = date('m'); // Get the current month
+                        $stmt->execute([$currentMonth]);
+                        
+                        while ($row = $stmt->fetch()) {
+                            echo '{ y:' . $row['total_hours'] . ', label: "'. $row['employee_name'] .'" },';
+                        } 
+                    ?>
+                ]
+            }]
         });
         chart.render();
 
         }
     </script>
-    <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
+
+    <!-- ====================== Admin User Script ====================== -->
+    <script>
+        function showAdmin() {
+            document.querySelector(".admin").style.display = "grid";
+            document.querySelector(".user").style.display = "none";
+        }
+        function showUser() {
+            document.querySelector(".admin").style.display = "none";
+            document.querySelector(".user").style.display = "grid";
+        }
+        <?php
+            if ($_SESSION['role'] == 'admin'){
+                echo 'showAdmin();';
+            } else {
+                echo 'showUser();';
+           }
+        ?>
+
+    </script>
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 </body>
 </html>
