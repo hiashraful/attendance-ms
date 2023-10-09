@@ -65,9 +65,9 @@ To get started with the Attendance Management System, follow these steps:
 5. Feel free to contribute to this project by forking the repository and submitting pull requests.
 
 ## Contributors
-[Ashraful Islam](https://github.com/hiashraful)
-[Ashraful Islam](https://github.com/hiashraful)
-[Ashraful Islam](https://github.com/hiashraful)
+[Ashraful Islam](https://github.com/hiashraful)  
+[Jannatul Fatima Puspo](https://github.com/jannatp)  
+[Md. Arif Uddin](https://github.com/mdarifuddin1)  
 
 ## License
 This project is licensed under the [MIT License](https://mit-license.org/)  .
