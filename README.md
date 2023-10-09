@@ -52,8 +52,10 @@ To get started with the Attendance Management System, follow these steps:
 
 ## Screenshots
 
-![Dashboard](/images/dashboard.png)
-![Location Map](/images/location-map.png)
+![Login Page](/img/login.png)
+![Dashboard](/img/dashboard.png)
+![Location Map](/img/location.png)
+![Email](/img/email.png)
 
 ## Future Development
 1. Implement reporting and analytics features to generate attendance reports.
