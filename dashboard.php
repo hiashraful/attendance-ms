@@ -102,6 +102,12 @@ $row = $stmt->fetch();
                     </a>
                 </li>
                 <li>
+                <a class="nav-list-item" href="dashboard.php">
+                        <i class="fas fa-home"></i>
+                        <span class="nav-item">Home</span>
+                    </a>
+                </li>
+                <li>
                     <a class="nav-list-item" href="#">
                         <i class="fas fa-comment"></i>
                         <span class="nav-item">Notification</span>
@@ -314,6 +320,9 @@ $row = $stmt->fetch();
                         <option value="30">30</option>
                     </select>
                 </form>
+                <?php if(isset($_POST['selectedDay'])){
+                    $noOfDay = intval($_POST['selectedDay']);
+                }?>
             </div>
             <div id="chartContainer" style="height: 370px; width: 100%;"></div>
             <!-- ===================== Now Online ================== -->
@@ -501,7 +510,7 @@ $row = $stmt->fetch();
             animationEnabled: true,
             theme: "light2", // "light1", "light2", "dark1", "dark2"
             title:{
-                text: <?= ($_SESSION['role'] == 'admin') ? '"Total Hours Worked This Month"' : '"Daily Hours"'; ?>
+                text: <?= ($_SESSION['role'] == 'admin') ? '"Hours Worked By Employees"' : '"Hours Worked By You"'?>
             },
             axisY: {
                 title: "Hours Worked"
@@ -514,24 +523,69 @@ $row = $stmt->fetch();
                 dataPoints: [      
                     <?php
                         if($_SESSION['role'] == 'admin'){
-                            $sql = "SELECT emp.name AS employee_name, SUM(eh.total_hours) AS total_hours
-                            FROM emp
-                            LEFT JOIN emp_history eh ON emp.id = eh.user_id
-                            WHERE MONTH(eh.login_date) = ? 
-                            GROUP BY emp.id";
-                    
-                            $stmt = $pdo->prepare($sql);
-                            $currentMonth = date('m'); // Get the current month
-                            $stmt->execute([$currentMonth]);
-                            
-                            while ($row = $stmt->fetch()) {
-                                echo '{ y:' . $row['total_hours'] . ', label: "'. $row['employee_name'] .'" },';
-                            } 
-                        } else{
-                            $sql = "SELECT eh.login_date AS emp_date, SUM(eh.total_hours) AS total_hours
+                            if (isset($noOfDay)) {
+                                $sql = "SELECT emp.name AS employee_name, IFNULL(SUM(eh.total_hours), 0) AS total_hours
+                                        FROM emp
+                                        LEFT JOIN emp_history eh ON emp.id = eh.user_id
+                                        WHERE eh.login_date >= DATE(NOW() - INTERVAL " . $noOfDay . " DAY)
+                                        GROUP BY emp.id";
+                        
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                        
+                                while ($row = $stmt->fetch()) {
+                                    echo '{ y:' . $row['total_hours'] . ', label: "'. $row['employee_name'] .'" },';
+                                }
+                            }else{
+                                $sql = "SELECT emp.name AS employee_name, SUM(eh.total_hours) AS total_hours
+                                FROM emp
+                                LEFT JOIN emp_history eh ON emp.id = eh.user_id
+                                WHERE MONTH(eh.login_date) = ? 
+                                GROUP BY emp.id";
+                        
+                                $stmt = $pdo->prepare($sql);
+                                $currentMonth = date('m'); // Get the current month
+                                $stmt->execute([$currentMonth]);
+                                
+                                while ($row = $stmt->fetch()) {
+                                    echo '{ y:' . $row['total_hours'] . ', label: "'. $row['employee_name'] .'" },';
+                                } 
+                            }
+                        } else{                            
+                            if(isset($noOfDay)){
+                                $sql = "SELECT d.d AS emp_date, IFNULL(SUM(eh.total_hours), 0) AS total_hours
+                                FROM (
+                                    SELECT DATE(NOW() - INTERVAL (n - 1) DAY) AS d
+                                    FROM (
+                                        SELECT 1 AS n UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5
+                                        UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10
+                                        UNION SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14 UNION SELECT 15
+                                        UNION SELECT 16 UNION SELECT 17 UNION SELECT 18 UNION SELECT 19 UNION SELECT 20
+                                        UNION SELECT 21 UNION SELECT 22 UNION SELECT 23 UNION SELECT 24 UNION SELECT 25
+                                        UNION SELECT 26 UNION SELECT 27 UNION SELECT 28 UNION SELECT 29 UNION SELECT 30
+                                    ) AS numbers
+                                ) AS d
+                                LEFT JOIN (
+                                    SELECT login_date, total_hours
+                                    FROM emp_history
+                                    WHERE user_id =".$_SESSION['user_id']." AND login_date >= DATE(NOW() - INTERVAL ".$noOfDay." DAY)
+                                ) eh ON d.d = eh.login_date
+                                GROUP BY d.d
+                                ORDER BY d.d DESC
+                                LIMIT ".$noOfDay.";
+                                ";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                while ($row = $stmt->fetch()) {
+                                    echo '{ y:' . $row['total_hours'] . ', label: "'. $row['emp_date'] .'" },';
+                                }
+                            } else{
+                                $sql = "SELECT eh.login_date AS emp_date, SUM(eh.total_hours) AS total_hours
                                 FROM emp_history eh
                                 WHERE MONTH(eh.login_date) = ?
-                                GROUP BY eh.login_date";
+                                GROUP BY eh.login_date
+                                ORDER BY eh.login_date DESC
+                                ";
                         
                                 $stmt = $pdo->prepare($sql);
                                 $currentMonth = date('m'); // Get the current month
@@ -539,7 +593,9 @@ $row = $stmt->fetch();
                                 
                                 while ($row = $stmt->fetch()) {
                                     echo '{ y:' . $row['total_hours'] . ', label: "'. $row['emp_date'] .'" },';
-                                } 
+                                }
+                            }
+
                         }
                         
                     ?>

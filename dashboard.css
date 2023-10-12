@@ -424,3 +424,17 @@ table thead tr {
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
+
+.select-days, .attendance{
+  padding: 0 20px;
+}
+
+#chartContainer{
+  padding: 0 20px;
+}
+
+.canvasjs-chart-canvas{
+  width: 100% !important;
+  border-radius: 6px !important;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1) !important;
+}
