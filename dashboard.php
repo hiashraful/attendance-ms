@@ -149,120 +149,190 @@ $row = $stmt->fetch();
 
 
         <section class="main">
-        <div class="main-top">
-            <h1>Employee Management System</h1>
-            <i class="fas fa-user-cog"></i>
-        </div>
+            <div class="main-top">
+                <h1>Employee Management System</h1>
+                <i class="fas fa-user-cog"></i>
+            </div>
+            <!-- ======================= Cards for user ================== -->
+            <div class="cardBox user" style="display: none;">
+                <div class="card">
+                    <div>
+                        <div class="numbers">
+                            <!-- first login time today -->
+                            <?php
+                                $sql = "SELECT * FROM emp_history WHERE user_id=? AND login_date=? ORDER BY login_time ASC LIMIT 1";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([$user['id'], date('Y-m-d')]);
+                                $today = $stmt->fetch();
+                                if (isset($today['login_time']) == null) {
+                                    echo '00:00:00';
+                                } else {
+                                    echo date('h:i A', strtotime($today['login_time']));
+                                }
+                                ?>
+                        </div>
+                        <div class="cardName">Logged In Today</div>
+                    </div>
 
-        <!-- ======================= Cards for user ================== -->
-        <div class="cardBox user" style="display: none;">
-            <div class="card">
-                <div>
-                    <div class="numbers">
-                        <!-- first login time today -->
+                    <div class="iconBx">
+                        <ion-icon name="cart-outline"></ion-icon>
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="numbers">
+                            <?php if ($totalHoursDay['total_hours'] == null) {echo 0;} else {echo $totalHoursDay['total_hours'];}?>
+                        </div>
+                        <div class="cardName">Time Registered Today</div>
+                    </div>
+                    <div class="iconBx">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">
+                            <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'];}?>
+                        </div>
+                        <div class="cardName">Hours Spent This Month</div>
+                    </div>
+                    <div class="iconBx">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="numbers">$
+                            <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'] * 10;}?>
+                        </div>
+                        <div class="cardName">Earnings This Month</div>
+                    </div>
+                    <div class="iconBx">
+                        <i class="fas fa-money-check-dollar"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- ======================= Cards for admin ================== -->
+            <div class="cardBox admin" style="display: none;">
+                <div class="card">
+                    <div>
+                        <div class="numbers">
+                            <?php
+                                $sql = "SELECT * FROM emp";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                $totalEmp = $stmt->rowCount();
+                                echo $totalEmp;
+                                ?>
+                        </div>
+                        <div class="cardName">Total Employee</div>
+                    </div>
+                    <div class="iconBx">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">
                         <?php
-                            $sql = "SELECT * FROM emp_history WHERE user_id=? AND login_date=? ORDER BY login_time ASC LIMIT 1";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute([$user['id'], date('Y-m-d')]);
-                            $today = $stmt->fetch();
-                            if (isset($today['login_time']) == null) {
-                                echo '00:00:00';
-                            } else {
-                                echo date('h:i A', strtotime($today['login_time']));
-                            }
-                            ?>
-                    </div>
-                    <div class="cardName">Logged In Today</div>
-                </div>
-
-                <div class="iconBx">
-                    <ion-icon name="cart-outline"></ion-icon>
-                    <i class="fas fa-clock"></i>
-                </div>
-            </div>
-            <div class="card">
-                <div>
-                    <div class="numbers">
-                        <?php if ($totalHoursDay['total_hours'] == null) {echo 0;} else {echo $totalHoursDay['total_hours'];}?>
-                    </div>
-                    <div class="cardName">Time Registered Today</div>
-                </div>
-                <div class="iconBx">
-                    <i class="fas fa-eye"></i>
-                </div>
-            </div>
-
-            <div class="card">
-                <div>
-                    <div class="numbers">
-                        <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'];}?>
-                    </div>
-                    <div class="cardName">Hours Spent This Month</div>
-                </div>
-                <div class="iconBx">
-                    <i class="fa-solid fa-calendar-check"></i>
-                </div>
-            </div>
-            <div class="card">
-                <div>
-                    <div class="numbers">$
-                        <?php if ($totalHoursMonth['total_hours'] == null) {echo 0;} else {echo $totalHoursMonth['total_hours'] * 10;}?>
-                    </div>
-                    <div class="cardName">Earnings This Month</div>
-                </div>
-                <div class="iconBx">
-                    <i class="fas fa-money-check-dollar"></i>
-                </div>
-            </div>
-        </div>
-        <!-- ======================= Cards for admin ================== -->
-        <div class="cardBox admin" style="display: none;">
-            <div class="card">
-                <div>
-                    <div class="numbers">
-                        <?php
-                            $sql = "SELECT * FROM emp";
+                            $sql = "SELECT COUNT(DISTINCT user_id) 
+                            FROM emp_history 
+                            WHERE login_time > '17:00:00' 
+                            AND login_date = CURDATE()";
+                    
                             $stmt = $pdo->prepare($sql);
                             $stmt->execute();
-                            $totalEmp = $stmt->rowCount();
-                            echo $totalEmp;
+                            $count = $stmt->fetchColumn();
+                            echo $count;
+                        ?>
+                        </div>
+                        <div class="cardName">Late Today</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <ion-icon name="cart-outline"></ion-icon>
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div>
+                        <div class="numbers">
+                        <!-- employees who are online -->
+                        <?php
+                                $sql = "SELECT eh.*
+                                FROM emp_history eh
+                                JOIN (
+                                    SELECT user_id, MAX(login_time) AS latest_login_time
+                                    FROM emp_history
+                                    WHERE logout_time IS NULL
+                                    GROUP BY user_id
+                                ) latest_login
+                                ON eh.user_id = latest_login.user_id AND eh.login_time = latest_login.latest_login_time;";
+
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                $online = $stmt->rowCount();
+                                echo $online;
+                                ?>
+                        </div>
+                        <div class="cardName">Now Online</div>
+                    </div>
+                    <div class="iconBx">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                </div>
+                <div class="card">
+                    <div>
+                        <div class="numbers">
+                        <!-- Total Work Hours This Month -->
+                        <?php
+                            $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE MONTH(login_date)=?";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->execute([date('m')]);
+                            $totalHoursMonth = $stmt->fetch();
+                            echo $totalHoursMonth['total_hours'] * 10;
                             ?>
+                        hrs</div>
+                        <div class="cardName">Work Hours This Month</div>
                     </div>
-                    <div class="cardName">Total Employee</div>
-                </div>
-                <div class="iconBx">
-                    <i class="fas fa-eye"></i>
+                    <div class="iconBx">
+                        <i class="fas fa-money-check-dollar"></i>
+                    </div>
                 </div>
             </div>
-
-            <div class="card">
-                <div>
-                    <div class="numbers">
-                    <?php
-                        $sql = "SELECT COUNT(DISTINCT user_id) 
-                        FROM emp_history 
-                        WHERE login_time > '17:00:00' 
-                        AND login_date = CURDATE()";
-                
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute();
-                        $count = $stmt->fetchColumn();
-                        echo $count;
-                    ?>
-                    </div>
-                    <div class="cardName">Late Today</div>
-                </div>
-
-                <div class="iconBx">
-                    <ion-icon name="cart-outline"></ion-icon>
-                    <i class="fas fa-clock"></i>
-                </div>
+            <!-- ======================= Bar Chart ================== -->
+            <div class="select-days">
+                <form action="" method="post">
+                    <select name="selectedDay" id="days" onchange="this.form.submit()">Select Days
+                        <option >Select Days</option>
+                        <option value="7">7</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                    </select>
+                </form>
             </div>
-
-            <div class="card">
-                <div>
-                    <div class="numbers">
-                    <!-- employees who are online -->
+            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+            <!-- ===================== Now Online ================== -->
+            <div class="attendance">
+                <div class="attendance-list">
+                <h1>Now Online</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>Date</th>
+                        <th>Join Time</th>
+                        <th>Hours Today</th>
+                        <th>Details</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     <?php
                             $sql = "SELECT eh.*
                             FROM emp_history eh
@@ -276,98 +346,37 @@ $row = $stmt->fetch();
 
                             $stmt = $pdo->prepare($sql);
                             $stmt->execute();
-                            $online = $stmt->rowCount();
-                            echo $online;
+                            $users = $stmt->fetchAll();
+
+                            foreach ($users as $user) {
+                                $sql = "SELECT * FROM emp WHERE id=?";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([$user['user_id']]);
+                                $emp = $stmt->fetch();
+
+                                $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute([$emp['id'], date('Y-m-d')]);
+                                $totalHoursDay = $stmt->fetch();
+                                echo '<tr>';
+                                echo '<td>' . $emp['id'] . '</td>';
+                                echo '<td>' . $emp['name'] . '</td>';
+                                echo '<td>' . $emp['designation'] . '</td>';
+                                echo '<td>' . $user['login_date'] . '</td>';
+                                echo '<td>' . $user['login_time'] . '</td>';
+                                echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
+                                echo '<td>
+                                    <a href="showUser.php?detail=' . $emp['id'] . ' "><i class="fa-solid fa-circle-info"></i></a>
+                                    <a href="showUser.php?location=' . $emp['id'] . ' "><i class="fa-solid fa-location-dot"></i></a>
+                                    <a href="showUser.php?email=' . $emp['id'] . ' "><i class="fa-solid fa-envelope"></i></a>
+                                    </td>';
+                                echo '</tr>';
+                            }
                             ?>
-                    </div>
-                    <div class="cardName">Now Online</div>
-                </div>
-                <div class="iconBx">
-                    <i class="fa-solid fa-calendar-check"></i>
+                    </tbody>
+                </table>
                 </div>
             </div>
-            <div class="card">
-                <div>
-                    <div class="numbers">
-                    <!-- Total Work Hours This Month -->
-                    <?php
-                        $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE MONTH(login_date)=?";
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute([date('m')]);
-                        $totalHoursMonth = $stmt->fetch();
-                        echo $totalHoursMonth['total_hours'] * 10;
-                        ?>
-                    hrs</div>
-                    <div class="cardName">Work Hours This Month</div>
-                </div>
-                <div class="iconBx">
-                    <i class="fas fa-money-check-dollar"></i>
-                </div>
-            </div>
-        </div>
-        <!-- ======================= Bar Chart ================== -->
-        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
-        <!-- ===================== Now Online ================== -->
-        <div class="attendance">
-            <div class="attendance-list">
-            <h1>Now Online</h1>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Designation</th>
-                    <th>Date</th>
-                    <th>Join Time</th>
-                    <th>Hours Today</th>
-                    <th>Details</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                        $sql = "SELECT eh.*
-                        FROM emp_history eh
-                        JOIN (
-                            SELECT user_id, MAX(login_time) AS latest_login_time
-                            FROM emp_history
-                            WHERE logout_time IS NULL
-                            GROUP BY user_id
-                        ) latest_login
-                        ON eh.user_id = latest_login.user_id AND eh.login_time = latest_login.latest_login_time;";
-
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute();
-                        $users = $stmt->fetchAll();
-
-                        foreach ($users as $user) {
-                            $sql = "SELECT * FROM emp WHERE id=?";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute([$user['user_id']]);
-                            $emp = $stmt->fetch();
-
-                            $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE user_id=? AND login_date=?";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute([$emp['id'], date('Y-m-d')]);
-                            $totalHoursDay = $stmt->fetch();
-                            echo '<tr>';
-                            echo '<td>' . $emp['id'] . '</td>';
-                            echo '<td>' . $emp['name'] . '</td>';
-                            echo '<td>' . $emp['designation'] . '</td>';
-                            echo '<td>' . $user['login_date'] . '</td>';
-                            echo '<td>' . $user['login_time'] . '</td>';
-                            echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
-                            echo '<td>
-                                <a href="showUser.php?detail=' . $emp['id'] . ' "><i class="fa-solid fa-circle-info"></i></a>
-                                <a href="showUser.php?location=' . $emp['id'] . ' "><i class="fa-solid fa-location-dot"></i></a>
-                                <a href="showUser.php?email=' . $emp['id'] . ' "><i class="fa-solid fa-envelope"></i></a>
-                                </td>';
-                            echo '</tr>';
-                        }
-                        ?>
-                </tbody>
-            </table>
-            </div>
-        </div>
         </section>
         <!-- ======================= Show Location ================== -->
         <section class="location" style="display: none;">
@@ -437,24 +446,24 @@ $row = $stmt->fetch();
         function showMap() {
             document.querySelector(".location").style.display = "block";
             main.style.opacity = '0.1';
-            var map = L.map("map").setView([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>], 14);
+            var map = L.map("map").setView([<?php if (isset($location['latitude']) == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if (isset($location['longitude']) == null) {echo 0;} else {echo $location['longitude'];}?>], 14);
             //lookup for zoom level
-            var marker = L.marker([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>]).addTo(map);
-            var circle = L.circle([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>], {
+            var marker = L.marker([<?php if (isset($location['latitude']) == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if (isset($location['longitude']) == null) {echo 0;} else {echo $location['longitude'];}?>]).addTo(map);
+            var circle = L.circle([<?php if (isset($location['latitude']) == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if (isset($location['longitude']) == null) {echo 0;} else {echo $location['longitude'];}?>], {
                 color: "green",
                 fillColor: "#cccff",
                 fillOpacity: 0.2,
                 radius: 500,
             }).addTo(map);
 
-            L.marker([<?php if ($location['latitude'] == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if ($location['longitude'] == null) {echo 0;} else {echo $location['longitude'];}?>], {icon: L.icon({
+            L.marker([<?php if (isset($location['latitude']) == null) {echo 0;} else {echo $location['latitude'];}?>, <?php if (isset($location['longitude']) == null) {echo 0;} else {echo $location['longitude'];}?>], {icon: L.icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
             iconSize: [25, 41], // Adjust the size as needed
             iconAnchor: [12, 41],
             popupAnchor: [0, -30] // Adjust the anchor point if necessary
         })})
                 .addTo(map)
-                .bindPopup("<?php if ($userLocation['name'] == null) {echo 0;} else {echo $userLocation['name'];}?> was here<br>logged in at <?php if ($location['login_time'] == null) {echo 0;} else {echo date('h:i A', strtotime($location['login_time']));}?>")
+                .bindPopup("<?php if (isset($userLocation['name']) == null) {echo 0;} else {echo $userLocation['name'];}?> was here<br>logged in at <?php if (isset($location['login_time']) == null) {echo 0;} else {echo date('h:i A', strtotime($location['login_time']));}?>")
                 .openPopup();
             L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
                 attribution:
@@ -492,7 +501,7 @@ $row = $stmt->fetch();
             animationEnabled: true,
             theme: "light2", // "light1", "light2", "dark1", "dark2"
             title:{
-                text: "Total Hours Worked This Month"
+                text: <?= ($_SESSION['role'] == 'admin') ? '"Total Hours Worked This Month"' : '"Daily Hours"'; ?>
             },
             axisY: {
                 title: "Hours Worked"
@@ -501,26 +510,43 @@ $row = $stmt->fetch();
                 type: "column",  
                 showInLegend: true, 
                 legendMarkerColor: "grey",
-                legendText: "Employees",
+                legendText: <?= ($_SESSION['role'] == 'admin') ? '"Employees"' : '"Dates"'; ?>,
                 dataPoints: [      
                     <?php
-                        $sql = "SELECT emp.name AS employee_name, SUM(eh.total_hours) AS total_hours
-                        FROM emp
-                        LEFT JOIN emp_history eh ON emp.id = eh.user_id
-                        WHERE MONTH(eh.login_date) = ? 
-                        GROUP BY emp.id";
-                
-                        $stmt = $pdo->prepare($sql);
-                        $currentMonth = date('m'); // Get the current month
-                        $stmt->execute([$currentMonth]);
+                        if($_SESSION['role'] == 'admin'){
+                            $sql = "SELECT emp.name AS employee_name, SUM(eh.total_hours) AS total_hours
+                            FROM emp
+                            LEFT JOIN emp_history eh ON emp.id = eh.user_id
+                            WHERE MONTH(eh.login_date) = ? 
+                            GROUP BY emp.id";
+                    
+                            $stmt = $pdo->prepare($sql);
+                            $currentMonth = date('m'); // Get the current month
+                            $stmt->execute([$currentMonth]);
+                            
+                            while ($row = $stmt->fetch()) {
+                                echo '{ y:' . $row['total_hours'] . ', label: "'. $row['employee_name'] .'" },';
+                            } 
+                        } else{
+                            $sql = "SELECT eh.login_date AS emp_date, SUM(eh.total_hours) AS total_hours
+                                FROM emp_history eh
+                                WHERE MONTH(eh.login_date) = ?
+                                GROUP BY eh.login_date";
                         
-                        while ($row = $stmt->fetch()) {
-                            echo '{ y:' . $row['total_hours'] . ', label: "'. $row['employee_name'] .'" },';
-                        } 
+                                $stmt = $pdo->prepare($sql);
+                                $currentMonth = date('m'); // Get the current month
+                                $stmt->execute([$currentMonth]);
+                                
+                                while ($row = $stmt->fetch()) {
+                                    echo '{ y:' . $row['total_hours'] . ', label: "'. $row['emp_date'] .'" },';
+                                } 
+                        }
+                        
                     ?>
                 ]
             }]
         });
+        
         chart.render();
 
         }

@@ -411,4 +411,16 @@ table thead tr {
   background-color: #3e8e41;
 }
 
-/* ======================= Admin User Separate ====================== */
+/* ======================= Select Days ====================== */
+.select-days {
+  position: relative;
+}
+#days{
+  width: 200px;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}

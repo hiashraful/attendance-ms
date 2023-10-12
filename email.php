@@ -232,6 +232,8 @@ $row = $stmt->fetch();
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert"></script>
 </head>
 <body>
     <section class="send-mail">
@@ -249,9 +251,6 @@ $row = $stmt->fetch();
             </div>
         </div>
         <div class="email">
-            <?php if (isset($statusMessage)) {?>
-                    <p id="status-msg"><?php echo $statusMessage; ?></p>
-                <?php }?>
             <h2>Send Email</h2>
             <form action="" method="post">
                 <select name="email" id="edrop">
@@ -296,13 +295,6 @@ $row = $stmt->fetch();
             </table>
     </section>
     <script>
-        setTimeout(function() {
-            var statusMessage = document.getElementById('status-msg');
-            if (statusMessage) {
-                statusMessage.style.display = 'none';
-            }
-        }, 2000);
-
         function showSentBox() {
             var inbox = document.querySelector('.email');
             var sent = document.querySelector('.sent');
@@ -316,7 +308,10 @@ $row = $stmt->fetch();
             inbox.style.display = 'block';
             sent.style.display = 'none';
         }
+        <?php if (isset($statusMessage)) {
+            echo "swal('Success', '$statusMessage', 'success');";
+        }?>
     </script>
-    <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
+    
 </body>
 </html>
