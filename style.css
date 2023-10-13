@@ -109,3 +109,30 @@ body {
   left: 45%;
 }
 
+@media (max-width: 576px) {
+  .login-container {
+    width: 70vw;
+    text-align: center;
+    box-shadow: none;
+    overflow: hidden;
+  }
+  .input-box {
+    width: 70vw;
+  }
+  #login-btn {
+    width: 70vw;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  #btn-logout {
+    width: 70vw;
+  }
+  #logout-msg {
+    width: 70vw;
+  }
+  #login-success {
+    width: 70vw;
+  }
+
+
+}

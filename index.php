@@ -27,7 +27,7 @@ if (isset($_SESSION['email'])) {
             <?php if (isset($logoutMessage)) {?>
                 <p id="logout-msg"><?php echo $logoutMessage; ?></p>
             <?php }?>
-            <h1 id="login-heading">ATTENDANCE MANAGEMENT SYSTEM</h1>
+            <h1 id="login-heading">EMPLOYEE MANAGEMENT SYSTEM</h1>
             <div class="icon">
                 <img src="img/user.png" width="60px">
             </div>

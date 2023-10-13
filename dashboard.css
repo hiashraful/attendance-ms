@@ -486,6 +486,7 @@ nav {
   height: 8vh;
   z-index: 1;
   background: #fff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;;
 }
 
 nav ul {

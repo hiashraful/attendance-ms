@@ -43,7 +43,6 @@ if (isset($_POST['send'])) {
     $currentDateTime = date("Y-m-d H:i:s");
     $stmt->execute([$_SESSION['user_id'], $_POST['email'], $_POST['subject'], $_POST['message'], $currentDateTime]);
 
-
 }
 
 $sql = "SELECT * FROM emp WHERE id=?";
@@ -75,7 +74,7 @@ $row = $stmt->fetch();
             background-color: #f1f1f1;
             box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         }
-        
+
         .sidebar {
             width: 300px;
             height: 91%;
@@ -230,6 +229,58 @@ $row = $stmt->fetch();
         select{
             outline: none;
         }
+        @media (max-width: 576px) {
+            .send-mail{
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                border: none;
+                border-radius: 0;
+                display: block;
+                justify-content: first baseline;
+                background-color: #f1f1f1;
+                box-shadow: none;
+                overflow: hidden;
+            }
+            .sidebar {
+                width: 70vw;
+                height: 9%;
+                background-color: #f1f1f1;
+                padding: 30px 0;
+                border-right: none;
+                position: absolute;
+                top: -200px;
+                left: 15%;
+            }
+
+            .navigation {
+                width: 100%;
+            }
+            .navigation ul li{
+                padding-left: 35%;
+            }
+            .email {
+                width: 90vw;
+                margin-top: 25vh;
+                padding: 10px;
+            }
+            .email h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 20px;
+                font-weight: 400;
+            }
+            .email input[type="text"],
+            .email textarea {
+                width: 95%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: none;
+                border-radius: 5px;
+                font-size: 15px;
+                box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            }
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
     <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
@@ -256,11 +307,11 @@ $row = $stmt->fetch();
                 <select name="email" id="edrop">
                     <option value="">Select Name</option>
                     <?php
-                    require 'connect.php';
-                    $sql = "SELECT * FROM emp";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute();
-                    while ($row = $stmt->fetch()) {?>
+require 'connect.php';
+$sql = "SELECT * FROM emp";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+while ($row = $stmt->fetch()) {?>
                         <option value="<?php echo $row['email']; ?>"><?php echo $row['name']; ?></option>
                     <?php }?>
                 </select>
@@ -280,11 +331,11 @@ $row = $stmt->fetch();
                     <th>Date</th>
                 </tr>
                 <?php
-                $sql = "SELECT * FROM sent_email WHERE sender_id=?";
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$_SESSION['user_id']]);
-                $result = $stmt->fetchAll();
-                foreach ($result as $row) {?>
+$sql = "SELECT * FROM sent_email WHERE sender_id=?";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$_SESSION['user_id']]);
+$result = $stmt->fetchAll();
+foreach ($result as $row) {?>
                     <tr>
                         <td><?php echo $row['receiver']; ?></td>
                         <td><?php echo $row['subject']; ?></td>
@@ -309,9 +360,9 @@ $row = $stmt->fetch();
             sent.style.display = 'none';
         }
         <?php if (isset($statusMessage)) {
-            echo "swal('Success', '$statusMessage', 'success');";
-        }?>
+    echo "swal('Success', '$statusMessage', 'success');";
+}?>
     </script>
-    
+
 </body>
 </html>
