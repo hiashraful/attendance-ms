@@ -125,25 +125,25 @@ if (isset($_POST['change-password'])) {
                 </div>
             </div>
         </section>
-    <section class="update" style="display: none;">
-        <form method="POST" enctype="multipart/form-data">
-            <h1>Update Information</h1>
-            <span id="cross">
-                <i class="fa-solid fa-rectangle-xmark" onclick="hideEditor()"></i>
-            </span>
-            <label for="user-name">Name: </label>
-            <input type="text" name="user-name" value="<?php if (isset($row['name'])) {echo $row['name'];}?>"> <br>
-            <label for="user-designation">Designation: </label>
-            <input type="text" name="user-designation" value="<?php if (isset($row['designation'])) {echo $row['designation'];}?>"> <br>
-            <label for="user-salary">Salary: </label>
-            <input type="text" name="user-salary" value="<?php if (isset($row['salary'])) {echo $row['salary'];}?>"> <br>
-            <label for="user-email">Email: </label>
-            <input type="email" name="user-email" value="<?php if (isset($row['email'])) {echo $row['email'];}?>"> <br>
-            <label for="user-image">Image: </label>
-            <input type="file" name="image" accept="image/*"> <br>
-            <input type="submit" value="Submit" name="update">
-        </form>
-    </section>
+        <section class="update" style="display: none;">
+            <form method="POST" enctype="multipart/form-data">
+                <h1>Update Information</h1>
+                <span id="cross">
+                    <i class="fa-solid fa-rectangle-xmark" onclick="hideEditor()"></i>
+                </span>
+                <label for="user-name">Name: </label>
+                <input type="text" name="user-name" value="<?php if (isset($row['name'])) {echo $row['name'];}?>"> <br>
+                <label for="user-designation">Designation: </label>
+                <input type="text" name="user-designation" value="<?php if (isset($row['designation'])) {echo $row['designation'];}?>"> <br>
+                <label for="user-salary">Salary: </label>
+                <input type="text" name="user-salary" value="<?php if (isset($row['salary'])) {echo $row['salary'];}?>"> <br>
+                <label for="user-email">Email: </label>
+                <input type="email" name="user-email" value="<?php if (isset($row['email'])) {echo $row['email'];}?>"> <br>
+                <label for="user-image">Image: </label>
+                <input type="file" name="image" accept="image/*"> <br>
+                <input type="submit" value="Submit" name="update">
+            </form>
+        </section>
     </div>
     <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
     <script>

@@ -219,3 +219,103 @@ input[type="submit"]:hover {
   top: 110px;
   left: 50%;
 }
+
+/* Responsive CSS */
+@media (max-width: 576px) {
+  .container{
+    width: 100vw;
+    background-color: brown !important;
+  }
+  .container h3 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    padding-left: 25%;
+    padding-top: 10px;
+  }
+  .profile{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-shadow: none;
+  }
+  .profile .sidebar {
+    width: 100%;
+    height: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+  }
+  .sidebar ul li:last-child {
+    margin-top: 0;
+  }
+  .details {
+    width: 100%;
+    border-radius: 0;
+  }
+  .details input {
+    width: 100%;
+  }
+  .details input[type="submit"] {
+    width: 100%;
+    margin-left: 0;
+  }
+  .update {
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    padding: 10px;
+    width: 100%;
+    transform: scale(0);
+    opacity: 0;
+    animation: scaleAndFadeIn 1s ease-in-out forwards;
+  }
+  .update form {
+    width: 95%;
+    background-color: white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 20px 10px;
+  }
+  .update h1 {
+    font-size: 25px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  #cross {
+    position: absolute;
+    top: 110px;
+    right: 30px;
+    padding: 10px;
+    width: 40px;
+    cursor: pointer;
+  }
+  .fa-rectangle-xmark {
+    font-size: 25px;
+    color: gray;
+  }
+  .img-container{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: 36%;
+    margin-bottom: 80px;
+  }
+  .img-container img{
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50%;
+  }
+  .profile .sidebar {
+    width: 100%;
+    padding: 0;
+  }
+  .profile{
+    position: absolute;
+  }
+  .navigation{
+    display: flex;
+    justify-content: space-around;
+  }
+}
