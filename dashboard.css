@@ -109,10 +109,10 @@ nav .fas {
   font-weight: 400;
 }
 
-  .menu-toggle {
-    display: none;
-    cursor: pointer;
-    padding: 10px;
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  padding: 10px;
 }
 
 /* MAin Section */
@@ -255,7 +255,7 @@ table thead tr {
   color: #a80505;
 }
 
-.fa-location-dot{
+.fa-location-dot {
   color: #fff;
   font-size: 20px;
 }
@@ -264,7 +264,7 @@ table thead tr {
   color: #fff;
   font-size: 20px;
 }
-.table .fa-envelope{
+.table .fa-envelope {
   color: #fff;
   font-size: 20px;
 }
@@ -318,7 +318,9 @@ table thead tr {
 }
 
 /* ======================= Map & User Details ====================== */
-.location, .details, .email {
+.location,
+.details,
+.email {
   width: 700px;
   position: absolute;
   top: 120px;
@@ -332,7 +334,9 @@ table thead tr {
   animation: scaleAndFadeIn 1s ease-in-out forwards;
 }
 
-.location h1, .details h1, .email h1 {
+.location h1,
+.details h1,
+.email h1 {
   font-size: 20px;
   font-weight: 400;
   margin-bottom: 20px;
@@ -368,15 +372,15 @@ table thead tr {
 }
 
 /* ======================= User Details ====================== */
-.info{
+.info {
   text-align: center;
 }
-.info label{
+.info label {
   font-size: 15px;
   font-weight: 500;
   margin-right: 10px;
 }
-.info input[type="text"]{
+.info input[type="text"] {
   width: 220px;
   padding: 10px;
   margin-bottom: 20px;
@@ -386,7 +390,7 @@ table thead tr {
   font-weight: 400;
   color: #333;
 }
-.info .img img{
+.info .img img {
   border-radius: 50%;
   margin-bottom: 20px;
 }
@@ -401,13 +405,13 @@ table thead tr {
   margin-bottom: 20px;
   border: none;
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 .email textarea {
   resize: none;
 }
 .email input[type="submit"] {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -422,44 +426,45 @@ table thead tr {
 .select-days {
   position: relative;
 }
-#days{
+#days {
   width: 200px;
   padding: 10px;
   margin-bottom: 20px;
   font-size: 15px;
   border: none;
   border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.select-days, .attendance{
+.select-days,
+.attendance {
   padding: 0 20px;
 }
 
-#chartContainer{
+#chartContainer {
   padding: 0 20px;
 }
 
-.canvasjs-chart-canvas{
+.canvasjs-chart-canvas {
   width: 100% !important;
   border-radius: 6px !important;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1) !important;
 }
 
-.opacityBack{
+.opacityBack {
   opacity: 0.1 !important;
 }
 
 /* ======================= Responsive ====================== */
 @media (max-width: 576px) {
-  .main{
+  .main {
     margin-top: 60px;
   }
-  .main-top h1{
-    margin-top: 20px;
-    color: #4CAF50;
+  .main-top h1 {
+    margin-top: 0px;
+    color: #4caf50;
   }
-  .menu-toggle{
+  .menu-toggle {
     display: block;
     position: absolute;
     top: 10px;
@@ -472,135 +477,152 @@ table thead tr {
     background-color: #333;
     margin: 4px 0;
     transition: 0.4s;
-}
+  }
 
+  .container {
+    position: relative;
+    width: 100vw;
+  }
+  nav {
+    position: fixed;
+    width: 100vw;
+    background-color: #4caf50;
+    height: 8%;
+    z-index: 1;
+    background: #fff;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+  }
 
-.container{
-  position: relative;
-  width: 100vw;
-}
-nav {
-  position: fixed;
-  width: 100vw;
-  background-color: #4CAF50;
-  height: 8vh;
-  z-index: 1;
-  background: #fff;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;;
-}
+  nav ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  nav li {
+    width: 100%;
+    list-style: none;
+  }
 
-nav ul {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
-  justify-content: center;
-}
-nav li {
-  width: 100%;
-  list-style: none;
-}
+  nav .nav-list-item,
+  .logout {
+    width: 60%;
+    margin: 0 auto;
+    font-size: 18px;
+    padding: 3px;
+    background-color: #eee;
+    border-radius: 30px;
+    margin-bottom: 5px;
+  }
+  .show {
+    height: 80%;
+  }
+  .user-name {
+    display: none;
+  }
 
-nav .nav-list-item, .logout {
-  margin: 0 auto;
-  font-size: 18px;
-  padding: 3px;
-  background-color: #eee;
-  border-radius: 30px;
-  margin-bottom: 5px;
-}
-.show{
-  height: 60vh;
-}
-.user-name{
-  display: none;
-}
+  .logo {
+    width: 80px;
+    height: 50px;
+    margin-top: 10px;
+  }
+  .logout {
+    position: relative;
+    margin-left: 21%;
+    width: 60%;
+  }
+  nav:hover {
+    width: 100vw;
+  }
 
-.logo{
-  width: 80px;
-  height: 50px;
-  margin-top: 10px;
-}
-.logout {
-  position: relative;
-  margin-left: 21%;
-  width: 245px;
-}
-nav:hover{
-  width: 100vw;
-}
+  .main {
+    width: 100%;
+  }
+  .main-top {
+    display: block;
+    text-align: center;
+  }
+  .container .main .cardBox {
+    grid-template-columns: 1fr;
+  }
+  .container .main .cardBox .card {
+    margin: 10px 0;
+  }
+  #days {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+  }
 
-.main{
-  width: 100%;
-}
-.main-top{
-  display: block;
-  text-align: center;
-}
-.container .main .cardBox{
-  grid-template-columns: 1fr;
-}
-.container .main .cardBox .card{
-  margin: 10px 0;
-}
-#days{
-  width: 100%;
-  text-align: center;
-  font-size: 18px;
-}
+  .attendance .attendance-list {
+    width: 100%;
+  }
 
-.attendance .attendance-list{
-  width: 100%;
-}
+  .table th,
+  .table td {
+    padding: 4px;
+  }
 
-.table th, .table td {
-  padding: 4px;
-}
+  .attendance-list {
+    overflow-x: auto;
+  }
+  .table tr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
 
-.attendance-list {
-  overflow-x: auto; 
-}
-.table tr{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.table tr td{
-  padding: 10px 0;
-}
-.attendance-list h1{
-  text-align: center;
-}
-.location, .details, .email {
-  width: 390px;
-  position: absolute;
-  top: 120px;
-  left: 10px;
-  padding: 10px 10px;
-  transform: scale(0);
-  opacity: 0;
-  background-color: #f3f3f3;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  animation: scaleAndFadeIn .5s ease-in-out forwards;
-}
-#map{
-  width: 100% !important;
-  height: 300px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-.cross{
-  top: 10px;
-  right: 10px;
-  padding: 5px;
-  width: 30px;
-}
-.location h1{
-  font-size: 15px;
-  font-weight: 400;
-  margin-top: 7px;
-}
+  .table tr td {
+    padding: 10px 0;
+  }
+  .attendance-list h1 {
+    text-align: center;
+  }
+  .location,
+  .details,
+  .email {
+    width: 95%;
+    position: absolute;
+    top: 4%;
+    left: 2%;
+    padding: 10px 10px;
+    transform: scale(0);
+    opacity: 0;
+    background-color: #f3f3f3;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    animation: scaleAndFadeIn 0.5s ease-in-out forwards;
+  }
+  #map {
+    width: 100% !important;
+    height: 300px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  .cross {
+    top: 10px;
+    right: 10px;
+    padding: 5px;
+    width: 30px;
+  }
+  .location h1 {
+    font-size: 15px;
+    font-weight: 400;
+    margin-top: 7px;
+  }
+  .attendance-list {
+    width: 100%;
+  }
+  #buttons{
+    display: flex;
+    justify-content: first baseline;
+  }
+  #buttons a{
+    width: 20px !important;
+    text-align: center;
+    margin: 0 5px;
+    padding-left: 25px;
+  }
 }

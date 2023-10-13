@@ -376,7 +376,7 @@ $row = $stmt->fetch();
                                 echo '<td>' . $user['login_date'] . '</td>';
                                 echo '<td>' . $user['login_time'] . '</td>';
                                 echo '<td>' . $totalHoursDay['total_hours'] . '</td>';
-                                echo '<td>
+                                echo '<td id="buttons">
                                     <a href="showUser.php?detail=' . $emp['id'] . ' "><i class="fa-solid fa-circle-info"></i></a>
                                     <a href="showUser.php?location=' . $emp['id'] . ' "><i class="fa-solid fa-location-dot"></i></a>
                                     <a href="showUser.php?email=' . $emp['id'] . ' "><i class="fa-solid fa-envelope"></i></a>
