@@ -93,13 +93,18 @@ $row = $stmt->fetch();
     <!-- New Dashboard -->
     <div class="container">
             <!-- ======================= Sidebar ================== -->
-        <nav>
+        <nav id="menu">
             <ul>
                 <li>
                     <a href="user.php?single=<?php echo $username ?>" class="logo">
                         <img src="<?php echo $user['img'] ?>" alt="">
                         <p class="user-name"><?php echo $username ?></p>
                     </a>
+                    <div class="menu-toggle" id="menuToggle">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
                 </li>
                 <li>
                 <a class="nav-list-item" href="dashboard.php">
@@ -153,11 +158,9 @@ $row = $stmt->fetch();
             </ul>
         </nav>
 
-
         <section class="main">
             <div class="main-top">
                 <h1>Employee Management System</h1>
-                <i class="fas fa-user-cog"></i>
             </div>
             <!-- ======================= Cards for user ================== -->
             <div class="cardBox user" style="display: none;">
@@ -196,7 +199,6 @@ $row = $stmt->fetch();
                         <i class="fas fa-eye"></i>
                     </div>
                 </div>
-
                 <div class="card">
                     <div>
                         <div class="numbers">
@@ -626,6 +628,17 @@ $row = $stmt->fetch();
            }
         ?>
 
+    </script>
+    <!-- ====================== Menu for mobile====================== -->
+    <script>
+        const menuToggle = document.getElementById("menuToggle");
+        const menu = document.querySelector("nav");
+
+        menuToggle.addEventListener("click", () => {
+            menu.classList.toggle("show");
+            main.classList.toggle("opacityBack");
+            
+        });
     </script>
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 </body>

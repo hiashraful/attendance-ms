@@ -108,6 +108,13 @@ nav .fas {
   font-size: 18px;
   font-weight: 400;
 }
+
+  .menu-toggle {
+    display: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
 /* MAin Section */
 .main {
   position: relative;
@@ -437,4 +444,162 @@ table thead tr {
   width: 100% !important;
   border-radius: 6px !important;
   box-shadow: 0 0 5px rgba(0,0,0,0.1) !important;
+}
+
+.opacityBack{
+  opacity: 0.1 !important;
+}
+
+/* ======================= Responsive ====================== */
+@media (max-width: 576px) {
+  .main{
+    margin-top: 60px;
+  }
+  .main-top h1{
+    margin-top: 20px;
+    color: #4CAF50;
+  }
+  .menu-toggle{
+    display: block;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+
+.container{
+  position: relative;
+  width: 100vw;
+}
+nav {
+  position: fixed;
+  width: 100vw;
+  background-color: #4CAF50;
+  height: 8vh;
+  z-index: 1;
+  background: #fff;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+}
+nav li {
+  width: 100%;
+  list-style: none;
+}
+
+nav .nav-list-item, .logout {
+  margin: 0 auto;
+  font-size: 18px;
+  padding: 3px;
+  background-color: #eee;
+  border-radius: 30px;
+  margin-bottom: 5px;
+}
+.show{
+  height: 60vh;
+}
+.user-name{
+  display: none;
+}
+
+.logo{
+  width: 80px;
+  height: 50px;
+  margin-top: 10px;
+}
+.logout {
+  position: relative;
+  margin-left: 21%;
+  width: 245px;
+}
+nav:hover{
+  width: 100vw;
+}
+
+.main{
+  width: 100%;
+}
+.main-top{
+  display: block;
+  text-align: center;
+}
+.container .main .cardBox{
+  grid-template-columns: 1fr;
+}
+.container .main .cardBox .card{
+  margin: 10px 0;
+}
+#days{
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+}
+
+.attendance .attendance-list{
+  width: 100%;
+}
+
+.table th, .table td {
+  padding: 4px;
+}
+
+.attendance-list {
+  overflow-x: auto; 
+}
+.table tr{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.table tr td{
+  padding: 10px 0;
+}
+.attendance-list h1{
+  text-align: center;
+}
+.location, .details, .email {
+  width: 390px;
+  position: absolute;
+  top: 120px;
+  left: 10px;
+  padding: 10px 10px;
+  transform: scale(0);
+  opacity: 0;
+  background-color: #f3f3f3;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  animation: scaleAndFadeIn .5s ease-in-out forwards;
+}
+#map{
+  width: 100% !important;
+  height: 300px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+.cross{
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  width: 30px;
+}
+.location h1{
+  font-size: 15px;
+  font-weight: 400;
+  margin-top: 7px;
+}
 }
