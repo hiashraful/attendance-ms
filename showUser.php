@@ -1,4 +1,5 @@
 <?php
+require 'connect.php';
 //these are from dashboard.php
 if (isset($_GET['detail'])) {
     $detail = $_GET['detail'];
@@ -15,8 +16,68 @@ if (isset($_GET['email'])) {
     header("Location: dashboard.php?email=$email");
     exit;
 }
-//these are from dashboard.php
+//these are from to dashboard.php
 
+//from admin card
+//now online
+if (isset($_GET['onlineEmp'])) {
+  $onlineUserData = urldecode($_GET['onlineEmp']);
+  $cardData = json_decode($onlineUserData, true);
+}
+
+//less than 35 hours
+if(isset($_GET['lessEmp'])){
+  $lessEmpData = urldecode($_GET['lessEmp']);
+  $cardData = json_decode($lessEmpData, true);
+}
+
+//late today
+if(isset($_GET['lateEmp'])){
+  $lateEmpData = urldecode($_GET['lateEmp']);
+  $cardData = json_decode($lateEmpData, true);
+}
+
+//all employees
+if(isset($_GET['allEmp'])){
+  $sql = "SELECT id AS user_id FROM emp";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute();
+  $cardData = $stmt->fetchAll();
+}
+
+//from user card
+
+
+//get details from cardData
+$currentMonth = date("m");
+$userData = [];
+
+foreach ($cardData as $user) {
+    $userId = $user['user_id'];
+    $sql1 = "SELECT * FROM emp WHERE id = ?";
+    $sql2 = "SELECT * FROM emp_history WHERE user_id = ? AND MONTH(login_date) = ?";
+    
+    $empStmt = $pdo->prepare($sql1);
+    $empStmt->execute([$userId]);
+    $ehStmt = $pdo->prepare($sql2);
+    $ehStmt->execute([$userId, $currentMonth]);
+
+    $empData = $empStmt->fetch();
+    $empHistoryData = $ehStmt->fetchAll();
+    
+    $totalHours = 0;
+    foreach ($empHistoryData as $historyEntry) {
+        if (!empty($historyEntry['total_hours'])) {
+            $totalHours += floatval($historyEntry['total_hours']);
+        }
+    }
+
+    $userData[] = [
+        'emp_data' => $empData,
+        'emp_history_data' => $empHistoryData,
+        'total_hours' => $totalHours,
+    ];
+}
 
 
 ?>
@@ -27,55 +88,39 @@ if (isset($_GET['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Employees</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <script src="https://kit.fontawesome.com/1f9b6a1a6b.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="attendance">
-        <div class="attendance-list">
-          <h1>Now Online</h1>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>ID</th>
+  <div class="employee">
+    <div class="show">
+      <table border="1">
+        <thead>
+            <tr>
+                <th>User ID</th>
                 <th>Name</th>
                 <th>Designation</th>
-                <th>Date</th>
-                <th>Join Time</th>
-                <th>Hours Today</th>
-                <th>Details</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-                    //select all employees from 
-                    require_once "connect.php";
-                    $sql = "SELECT * FROM emp";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->execute();
-                    $users = $stmt->fetchAll();
-
-                    foreach ($users as $user) {
-                        $sql = "SELECT * FROM emp_history WHERE user_id = ? ORDER BY login_time DESC LIMIT 1";
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->execute([$user['id']]);
-                        $emp = $stmt->fetch();
-                        echo '<tr>';
-                        echo '<td>' . $user['id'] . '</td>';
-                        echo '<td>' . $user['name'] . '</td>';
-                        echo '<td>' . $user['designation'] . '</td>';
-                        echo '<td>' . $emp['login_date'] . '</td>';
-                        echo '<td>' . $emp['login_time'] . '</td>';
-                        echo '<td>' . $emp['total_hours'] . '</td>';
-                        echo '<td>
-                            <a href="showUser.php?detail=' . $emp['user_id'] . ' "><i class="fa-solid fa-circle-info"></i></a>
-                            <a href="showUser.php?location=' . $emp['user_id'] . ' "><i class="fa-solid fa-location-dot"></i></a>
-                            <a href="showUser.php?email=' . $emp['user_id'] . ' "><i class="fa-solid fa-envelope"></i></a>
-                            </td>';
-                        echo '</tr>';
-                    }
-                    ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
+                <th>Role</th>
+                <th>Salary</th>
+                <th>Email</th>
+                <th>Total Hours (This Month)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($userData as $user) : ?>
+                <tr>
+                    <td><?= $user['emp_data']['id']; ?></td>
+                    <td><?= $user['emp_data']['name']; ?></td>
+                    <td><?= $user['emp_data']['designation']; ?></td>
+                    <td><?= $user['emp_data']['role']; ?></td>
+                    <td><?= $user['emp_data']['salary']; ?></td>
+                    <td><?= $user['emp_data']['email']; ?></td>
+                    <td><?= $user['total_hours']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </body>
 </html>

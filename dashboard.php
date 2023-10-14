@@ -224,7 +224,7 @@ $row = $stmt->fetch();
             </div>
             <!-- ======================= Cards for admin ================== -->
             <div class="cardBox admin" style="display: none;">
-                <div class="card">
+                <div class="card" id="total_emp" >
                     <div>
                         <div class="numbers">
                             <?php
@@ -242,19 +242,20 @@ $row = $stmt->fetch();
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card" id="late_today">
                     <div>
                         <div class="numbers">
                         <?php
-                            $sql = "SELECT COUNT(DISTINCT user_id) 
+                            $sql = "SELECT DISTINCT user_id
                             FROM emp_history 
-                            WHERE login_time > '17:00:00' 
+                            WHERE login_time > '10:00:00' 
                             AND login_date = CURDATE()";
                     
                             $stmt = $pdo->prepare($sql);
                             $stmt->execute();
-                            $count = $stmt->fetchColumn();
-                            echo $count;
+                            $lateUserData = $stmt->fetchAll();
+                            $lateUserCount = $stmt->rowCount();
+                            echo $lateUserCount;
                         ?>
                         </div>
                         <div class="cardName">Late Today</div>
@@ -266,7 +267,7 @@ $row = $stmt->fetch();
                     </div>
                 </div>
 
-                <div class="card">
+                <div class="card" id="now_online">
                     <div>
                         <div class="numbers">
                         <!-- employees who are online -->
@@ -283,6 +284,7 @@ $row = $stmt->fetch();
 
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->execute();
+                                $onlineUserData = $stmt->fetchAll();
                                 $online = $stmt->rowCount();
                                 echo $online;
                                 ?>
@@ -293,19 +295,26 @@ $row = $stmt->fetch();
                         <i class="fa-solid fa-calendar-check"></i>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card" id="less_emp">
                     <div>
                         <div class="numbers">
-                        <!-- Total Work Hours This Month -->
+                        <!-- Less than 35hrs this month -->
                         <?php
-                            $sql = "SELECT SUM(total_hours) AS total_hours FROM emp_history WHERE MONTH(login_date)=?";
+                            $sql = "SELECT emp.name AS employee_name, SUM(eh.total_hours) AS total_hours, eh.user_id AS user_id
+                            FROM emp
+                            LEFT JOIN emp_history eh ON emp.id = eh.user_id
+                            WHERE MONTH(eh.login_date) = ? AND eh.total_hours < 35
+                            GROUP BY emp.id";
+
                             $stmt = $pdo->prepare($sql);
-                            $stmt->execute([date('m')]);
-                            $totalHoursMonth = $stmt->fetch();
-                            echo $totalHoursMonth['total_hours'] * 10;
+                            $currentMonth = date('m'); // Get the current month
+                            $stmt->execute([$currentMonth]);
+                            $lessUserData = $stmt->fetchAll();
+                            $lessEmp = $stmt->rowCount();
+                            echo $lessEmp;
                             ?>
-                        hrs</div>
-                        <div class="cardName">Work Hours This Month</div>
+                        </div>
+                        <div class="cardName">Less Than 35hrs</div>
                     </div>
                     <div class="iconBx">
                         <i class="fas fa-money-check-dollar"></i>
@@ -639,6 +648,31 @@ $row = $stmt->fetch();
             main.classList.toggle("opacityBack");
             
         });
+    </script>
+    <!-- ====================== Show Users From Card Script ====================== -->
+    <script>
+        document.getElementById("now_online").addEventListener("click", function() {
+            var userData = JSON.stringify(<?php echo json_encode($onlineUserData); ?>);
+            var encodedData = encodeURIComponent(userData);
+            window.location.href = "showUser.php?onlineEmp=" + encodedData;
+        });
+
+        document.getElementById("less_emp").addEventListener("click", function() {
+            var userData = JSON.stringify(<?php echo json_encode($lessUserData); ?>);
+            var encodedData = encodeURIComponent(userData);
+            window.location.href = "showUser.php?lessEmp=" + encodedData;
+        });
+
+        document.getElementById("late_today").addEventListener("click", function() {
+            var userData = JSON.stringify(<?php echo json_encode($lateUserData); ?>);
+            var encodedData = encodeURIComponent(userData);
+            window.location.href = "showUser.php?lateEmp=" + encodedData;
+        });
+
+        document.getElementById("total_emp").addEventListener("click", function() {
+            window.location.href = "showUser.php?allEmp=" + <?php echo $totalEmp; ?>;
+        });
+
     </script>
     <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 </body>
