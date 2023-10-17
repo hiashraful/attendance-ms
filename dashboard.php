@@ -257,21 +257,21 @@ $row = $stmt->fetch();
                 <div class="card" id="late_today">
                     <div>
                         <div class="numbers">
-                        <?php
-                            $sql = "SELECT DISTINCT user_id
-                            FROM emp_history 
-                            WHERE login_time > '10:00:00' 
-                            AND login_date = CURDATE()";
-                    
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->execute();
-                            $lateUserData = $stmt->fetchAll();
-                            $lateUserCount = $stmt->rowCount();
-                            echo $lateUserCount;
-                        ?>
+                            <?php
+                                $sql = "SELECT DISTINCT user_id
+                                FROM emp_history 
+                                WHERE login_time > '10:00:00' 
+                                AND login_date = CURDATE()";
+                        
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->execute();
+                                $lateUserData = $stmt->fetchAll();
+                                $lateUserCount = $stmt->rowCount();
+                                echo $lateUserCount;
+                            ?>
                         </div>
-                        <div class="cardName">Late Today</div>
-                    </div>
+                    <div class="cardName">Late Today</div>
+                </div>
 
                     <div class="iconBx">
                         <ion-icon name="cart-outline"></ion-icon>
