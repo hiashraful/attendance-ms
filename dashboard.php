@@ -172,7 +172,7 @@ $row = $stmt->fetch();
 
         <section class="main">
             <div class="main-top">
-                <h1>Employee Management System</h1>
+                <h1>Attendance Management System</h1>
             </div>
             <!-- ======================= Cards for user ================== -->
             <div class="cardBox user" style="display: none;">
