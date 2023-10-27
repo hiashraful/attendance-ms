@@ -440,8 +440,10 @@ table thead tr {
 .attendance {
   padding: 0 20px;
 }
-
-#chartContainer {
+.show-chart{
+  display: flex;
+}
+#chartContainer, #pieChartContainer {
   padding: 0 20px;
 }
 
